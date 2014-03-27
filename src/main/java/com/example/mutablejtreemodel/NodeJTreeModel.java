@@ -3,9 +3,8 @@ package com.example.mutablejtreemodel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.event.TreeModelEvent;
@@ -43,15 +42,13 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 * listener set. It's very easy to forget removing listeners when the actual
 	 * instance isn't in use any more and thats a source of memory leak.
 	 */
-	private Set<TreeModelListener> listeners;
+	private List<TreeModelListener> listeners;
 
 	/**
 	 * Constructor.
 	 */
 	public NodeJTreeModel() {
-		listeners = Collections
-				.newSetFromMap(new WeakHashMap<TreeModelListener, Boolean>(32,
-						0.75f));
+		listeners = new ArrayList<>();
 	}
 
 	// Getters and Setters

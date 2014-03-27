@@ -4,10 +4,7 @@ package com.example.mutablejtreemodel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 import javax.swing.tree.TreePath;
@@ -46,7 +43,7 @@ public class Node implements ActionListener {
 	 * forget removing listeners when the actual instance isn't in use any more
 	 * and thats a source of memory leak.
 	 */
-	private Set<ActionListener> listeners;
+	private List<ActionListener> listeners;
 
 	/**
 	 * Constructor.
@@ -57,9 +54,7 @@ public class Node implements ActionListener {
 	public Node(String name) {
 		this.name = name;
 		children = new ArrayList<>();
-		listeners = Collections
-				.newSetFromMap(new WeakHashMap<ActionListener, Boolean>(32,
-						0.75f));
+		listeners = new ArrayList<>();
 	}
 
 	/** Constructor. */
