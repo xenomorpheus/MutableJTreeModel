@@ -27,7 +27,7 @@ public class Node implements ActionListener {
 	private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
 
 	/** synchronisation lock */
-	private static final Object OBJ_LOCK = new Object();
+	private final Object objLock = new Object();
 	// Read more:
 	// http://javarevisited.blogspot.com/2011/04/synchronization-in-java-synchronized.html#ixzz2wy76gzSj
 
@@ -85,7 +85,7 @@ public class Node implements ActionListener {
 	 *            the new parent.
 	 */
 	public void setParent(Node parent) {
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			this.parent = parent;
 		}
 	}
@@ -94,7 +94,7 @@ public class Node implements ActionListener {
 	 * @return the parent node.
 	 */
 	public Node getParent() {
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			return parent;
 		}
 	}
@@ -112,7 +112,7 @@ public class Node implements ActionListener {
 	 * @return The number of child nodes.
 	 */
 	public int getChildCount() {
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			return children.size();
 		}
 	}
@@ -126,7 +126,7 @@ public class Node implements ActionListener {
 	 * @return the child node at this position.
 	 */
 	public Node getChild(int index) {
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			Node child = children.get(index);
 			LOGGER.info("At index=" + index + " found child named '"
 					+ child.name + "'");
@@ -143,7 +143,7 @@ public class Node implements ActionListener {
 	 * @return the position number.
 	 */
 	public int getIndexOfChild(Node child) {
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			int index = children.indexOf(child);
 			LOGGER.info("getIndexOfChild: In node '" + name + "' found child "
 					+ child.name + " at index " + index);
@@ -160,7 +160,7 @@ public class Node implements ActionListener {
 	 * @return true only if found as a direct child of this object.
 	 */
 	public boolean isOurChild(Node node) {
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			return children.contains(node);
 		}
 	}
@@ -173,7 +173,7 @@ public class Node implements ActionListener {
 	 */
 	public void add(Node child) {
 		// Wrapped in sync to ensure size is still correct when add is called.
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			add(child, children.size());
 		}
 	}
@@ -189,7 +189,7 @@ public class Node implements ActionListener {
 	public void add(Node child, int childCount) {
 		LOGGER.info("Parent='" + name + "', child='" + child + "' at index="
 				+ childCount);
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			// child node from current parent, if any.
 			Node currentContainer = child.getParent();
 			if (null != currentContainer) {
@@ -217,7 +217,7 @@ public class Node implements ActionListener {
 	 */
 	public void remove(Node child) {
 		LOGGER.info("remove node=" + this);
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			children.remove(child);
 			child.setParent(null);
 
@@ -233,7 +233,7 @@ public class Node implements ActionListener {
 	public TreePath getPathToRoot() {
 		Node node = this;
 		ArrayList<Node> nodeArrayList = new ArrayList<Node>();
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			while ((null != node)) {
 				nodeArrayList.add(node);
 				node = node.getParent();
@@ -253,10 +253,13 @@ public class Node implements ActionListener {
 	 */
 	private void fireNodeChanged(ActionEvent e) {
 		LOGGER.info("fireTreeNodeChanged node='" + this + "'");
-		synchronized (OBJ_LOCK) {
-			for (ActionListener listener : listeners) {
-				listener.actionPerformed(e);
-			}
+		ActionListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new ActionListener[listeners.size()]);
+		}
+		for (ActionListener listener : tmpListeners) {
+			listener.actionPerformed(e);
 		}
 	}
 
@@ -270,7 +273,7 @@ public class Node implements ActionListener {
 	public void addActionListener(ActionListener listener) {
 		LOGGER.info("addActionListener for '" + this + "', listener='"
 				+ listener + "'");
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			listeners.add(listener);
 		}
 	}
@@ -285,7 +288,7 @@ public class Node implements ActionListener {
 	public void removeActionListener(ActionListener listener) {
 		LOGGER.info("removeActionListener for '" + this + "', listener="
 				+ listener);
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			listeners.remove(listener);
 		}
 	}
@@ -313,7 +316,7 @@ public class Node implements ActionListener {
 		event = new ActionEvent(this, 0, NodeChangeType.NODE_REMOVED.toString());
 		fireNodeChanged(event);
 		// If parent still set, remove this node from parent.
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			if (null != parent) {
 				parent.remove(this);
 			}
@@ -326,22 +329,22 @@ public class Node implements ActionListener {
 	 * Perform actions when we are notified about an event. e.g. the death of
 	 * one of our child nodes.
 	 * 
-	 * @param e
+	 * @param event
 	 *            the event we have been informed about.
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(ActionEvent)
 	 */
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		LOGGER.info("actionPerformed, event=" + e.toString());
-		String command = e.getActionCommand();
-		Object source = e.getSource();
+	public void actionPerformed(ActionEvent event) {
+		LOGGER.info("actionPerformed, event=" + event.toString());
+		String command = event.getActionCommand();
+		Object source = event.getSource();
 		if (NodeChangeType.NODE_REMOVED.toString().equals(command)) {
 			LOGGER.info(command + " event");
 			if (source instanceof Node) {
 				Node child = (Node) source;
 				LOGGER.info("actionPerformed,  Source is node=" + child);
-				synchronized (OBJ_LOCK) {
+				synchronized (objLock) {
 					if (children.contains(child)) {
 						LOGGER.info("actionPerformed,     '" + this
 								+ "' removing child node called='" + child

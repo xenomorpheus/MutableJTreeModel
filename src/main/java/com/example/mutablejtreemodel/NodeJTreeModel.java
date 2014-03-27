@@ -33,7 +33,7 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 * http://javarevisited.blogspot.com/2011/04/synchronization
 	 * -in-java-synchronized.html#ixzz2wy76gzSj
 	 */
-	private static final Object OBJ_LOCK = new Object();
+	private final Object objLock = new Object();
 
 	/** We specify the root directory when we create the model. */
 	private Node root;
@@ -50,7 +50,8 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	public NodeJTreeModel() {
 		listeners = Collections
-				.newSetFromMap(new WeakHashMap<TreeModelListener,Boolean>(32, 0.75f));
+				.newSetFromMap(new WeakHashMap<TreeModelListener, Boolean>(32,
+						0.75f));
 	}
 
 	// Getters and Setters
@@ -87,10 +88,14 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	private void fireStructureChanged(TreePath path) {
 		TreeModelEvent event = new TreeModelEvent(this, path);
-		synchronized (OBJ_LOCK) {
-			for (TreeModelListener lis : listeners) {
-				lis.treeStructureChanged(event);
-			}
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener lis : tmpListeners) {
+			lis.treeStructureChanged(event);
 		}
 	}
 
@@ -106,10 +111,15 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 			Object[] nodes) {
 		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices,
 				nodes);
-		synchronized (OBJ_LOCK) {
-			for (TreeModelListener lis : listeners) {
-				lis.treeNodesRemoved(event);
-			}
+
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener lis : tmpListeners) {
+			lis.treeNodesRemoved(event);
 		}
 	}
 
@@ -136,10 +146,14 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 			Object[] nodes) {
 		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices,
 				nodes);
-		synchronized (OBJ_LOCK) {
-			for (TreeModelListener lis : listeners) {
-				lis.treeNodesChanged(event);
-			}
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener lis : tmpListeners) {
+			lis.treeNodesChanged(event);
 		}
 	}
 
@@ -175,10 +189,14 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 			Object[] subNodes) {
 		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices,
 				subNodes);
-		synchronized (OBJ_LOCK) {
-			for (TreeModelListener lis : listeners) {
-				lis.treeNodesInserted(event);
-			}
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener lis : tmpListeners) {
+			lis.treeNodesInserted(event);
 		}
 	}
 
@@ -265,7 +283,7 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	@Override
 	public void addTreeModelListener(TreeModelListener listener) {
 		LOGGER.info("Adding Listener: " + listener);
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			listeners.add(listener);
 		}
 	}
@@ -280,7 +298,7 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	@Override
 	public void removeTreeModelListener(TreeModelListener listener) {
 		LOGGER.info("Remove Listener: " + listener);
-		synchronized (OBJ_LOCK) {
+		synchronized (objLock) {
 			listeners.remove(listener);
 		}
 	}
