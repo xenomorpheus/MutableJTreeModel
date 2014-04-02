@@ -3,6 +3,7 @@
 package com.example.mutablejtreemodel;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -83,14 +84,23 @@ public class NodeJTreeEditor {
 								.getLastSelectedPathComponent();
 						Node newNode = new Node("node" + ++NodeId);
 						location.add(newNode);
+
+						// Expand the new added node
+						jTree.expandPath(location.getPathToRoot());
+
 					} else if (removeButton == source) {
 						Node node = (Node) jTree.getLastSelectedPathComponent();
 						node.destroy();
 					} else {
-						LOGGER.info("Event source not known:" + source);
+						LOGGER.warning("Event source not known:" + source);
 						toolkit.beep();
 					}
+
+					// Update the tree view
+					jTree.updateUI();
+
 				} else {
+					LOGGER.warning("Event selected Object should be a Node:" + selObject);
 					toolkit.beep();
 				}
 
@@ -109,7 +119,12 @@ public class NodeJTreeEditor {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(scrollpane, BorderLayout.CENTER);
 		frame.getContentPane().add(addPanel, BorderLayout.SOUTH);
-		frame.setSize(400, 600);
+		frame.setPreferredSize(new Dimension(400, 600));
 		frame.setVisible(true);
+
+		// Always pack the frame after adding components.
+		// (Recommended after every change that the components may have)
+		frame.pack();
+
 	}
 }

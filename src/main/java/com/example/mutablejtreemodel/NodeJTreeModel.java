@@ -243,7 +243,12 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 			// break;
 
 			case NODE_REMOVED:
-				fireNodeRemoved(node.getParent().getPathToRoot(), id, node);
+				// Handle root deletion attempt
+				if (node.getParent() != null)
+					fireNodeRemoved(node.getParent().getPathToRoot(), id, node);
+				else {
+					LOGGER.info("Cannot delete Root node!");
+				}
 				break;
 
 			// case NODES_CHANGED:

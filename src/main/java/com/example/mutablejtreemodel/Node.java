@@ -99,7 +99,11 @@ public class Node implements ActionListener {
 	 * @return True only if the node has no children.
 	 */
 	public boolean isLeaf() {
-		return false;
+
+		// This will generate the 'file' icon for the leafs,
+		// and the folder icons for the non-leafs.Also, you will probably need
+		// the implementation later.
+		return children.isEmpty();
 	}
 
 	/**
@@ -222,7 +226,7 @@ public class Node implements ActionListener {
 	}
 
 	/**
-	 * @return a path of nodes leading up to the root node.
+	 * @return a path of nodes leading down from the root node.
 	 */
 
 	public TreePath getPathToRoot() {
@@ -230,10 +234,9 @@ public class Node implements ActionListener {
 		ArrayList<Node> nodeArrayList = new ArrayList<Node>();
 		synchronized (objLock) {
 			while ((null != node)) {
-				nodeArrayList.add(node);
+				nodeArrayList.add(0,node);
 				node = node.getParent();
 			}
-
 			return new TreePath(nodeArrayList.toArray(new Node[nodeArrayList
 					.size()]));
 		}
