@@ -229,7 +229,7 @@ public class Node implements ActionListener {
 	 * @return a path of nodes leading down from the root node.
 	 */
 
-	public TreePath getPathToRoot() {
+	public TreePath getPathFromRoot() {
 		Node node = this;
 		ArrayList<Node> nodeArrayList = new ArrayList<Node>();
 		synchronized (objLock) {

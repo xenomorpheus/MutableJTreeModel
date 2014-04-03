@@ -229,12 +229,12 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 		if (source instanceof Node) {
 			Node node = (Node) source;
 			LOGGER.info("command type: " + command);
-			LOGGER.info("fire events: Node path to root" + node.getPathToRoot());
+			LOGGER.info("fire events: Node path from root" + node.getPathFromRoot());
 
 			switch (command) {
 
 			case STRUCTURE_CHANGED:
-				fireStructureChanged(node.getPathToRoot());
+				fireStructureChanged(node.getPathFromRoot());
 				break;
 
 			// case NODES_REMOVED:
@@ -244,8 +244,9 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 
 			case NODE_REMOVED:
 				// Handle root deletion attempt
-				if (node.getParent() != null)
-					fireNodeRemoved(node.getParent().getPathToRoot(), id, node);
+				if (node.getParent() != null){
+					fireNodeRemoved(node.getParent().getPathFromRoot(), id, node);
+				}
 				else {
 					LOGGER.info("Cannot delete Root node!");
 				}
@@ -257,7 +258,7 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 			// break;
 
 			case NODE_CHANGED:
-				fireNodeChanged(node.getParent().getPathToRoot(), id, node);
+				fireNodeChanged(node.getParent().getPathFromRoot(), id, node);
 				break;
 
 			// case NODES_INSERTED:
@@ -266,7 +267,7 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 			// break;
 
 			case NODE_INSERTED:
-				fireNodeInserted(node.getParent().getPathToRoot(), id, node);
+				fireNodeInserted(node.getParent().getPathFromRoot(), id, node);
 				break;
 
 			default:

@@ -10,8 +10,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.example.mutablejtreemodel.Node;
-
 /**
  * @author xenomorpheus
  * @version $Revision: 1.0 $
@@ -80,14 +78,16 @@ public class NodeTest {
 				parent.isOurChild(child));
 	}
 
-	/** test the pathToRoot method */
+	/** test the pathFromRoot method */
 	@Test
-	public void testPathToRoot() {
+	public void testPathFromRoot() {
+		Node root = new Node("Root");
 		Node parent = new Node("Parent");
 		Node child = new Node("Child");
+		root.add(parent);
 		parent.add(child);
-		TreePath got = child.getPathToRoot();
-		TreePath expected = new TreePath(new Node[] { child, parent });
+		TreePath got = child.getPathFromRoot();
+		TreePath expected = new TreePath(new Node[] { root, parent, child });
 		assertEquals("path", expected, got);
 	}
 

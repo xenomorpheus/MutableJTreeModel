@@ -86,7 +86,7 @@ public class NodeJTreeEditor {
 						location.add(newNode);
 
 						// Expand the new added node
-						jTree.expandPath(location.getPathToRoot());
+						jTree.expandPath(location.getPathFromRoot());
 
 					} else if (removeButton == source) {
 						Node node = (Node) jTree.getLastSelectedPathComponent();
