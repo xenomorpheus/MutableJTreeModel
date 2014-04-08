@@ -44,26 +44,22 @@ public class NodeJTreeEditor {
 		public void actionPerformed(ActionEvent event) {
 			Object selObject = jTree.getLastSelectedPathComponent();
 			if ((null != selObject) && (selObject instanceof Node)) {
+				Node location = (Node) jTree.getLastSelectedPathComponent();
+				Node newNode = new Node("node" + ++NodeId);
+				location.add(newNode);
 
-				Object source = event.getSource();
-				if (addButton == source) {
-					Node location = (Node) jTree.getLastSelectedPathComponent();
-					Node newNode = new Node("node" + ++NodeId);
-					location.add(newNode);
+				// Expand the new added node
+				jTree.expandPath(location.getPathFromRoot());
 
-					// Expand the new added node
-					jTree.expandPath(location.getPathFromRoot());
-
-					// TODO MVC BUG - Update the tree view
-					jTree.updateUI();
-
-				}
+				// TODO MVC BUG - Update the tree view
+				jTree.updateUI();
 			}
 		}
 	});
 
 	/** the remove button */
-	private final JButton removeButton = new JButton(new AbstractAction("Remove") {
+	private final JButton removeButton = new JButton(new AbstractAction(
+			"Remove") {
 
 		/**
 		 * serial id.
@@ -75,11 +71,8 @@ public class NodeJTreeEditor {
 			Object selObject = jTree.getLastSelectedPathComponent();
 			if ((null != selObject) && (selObject instanceof Node)) {
 
-				Object source = event.getSource();
-				if (removeButton == source) {
-					Node node = (Node) jTree.getLastSelectedPathComponent();
-					node.destroy();
-				}
+				Node node = (Node) jTree.getLastSelectedPathComponent();
+				node.destroy();
 
 				// TODO MVC BUG - Update the tree view
 				jTree.updateUI();

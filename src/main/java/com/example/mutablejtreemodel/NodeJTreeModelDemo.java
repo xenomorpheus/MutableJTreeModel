@@ -24,7 +24,7 @@ public class NodeJTreeModelDemo {
 	private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
 
 	/** the root node of the tree. */
-	static final Node root = new Node("Root Node");
+	private static final Node ROOT = new Node("Root Node");
 
 	/**
 	 * Method startSwing.
@@ -61,14 +61,14 @@ public class NodeJTreeModelDemo {
 	 * 
 	 * @throws InterruptedException */
 	public static void main(String[] argv) throws InterruptedException {
-		Node parent = root;
+		Node parent = ROOT;
 		Node child = null;
 
 		// Trying to put the UI on a different thread to the one that changes the Model.
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				NodeJTreeModelDemo demo = new NodeJTreeModelDemo();
-				demo.startSwing(root);
+				demo.startSwing(ROOT);
 			}
 		});
 
