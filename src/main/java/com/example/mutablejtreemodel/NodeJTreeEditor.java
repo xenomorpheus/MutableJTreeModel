@@ -4,11 +4,9 @@ package com.example.mutablejtreemodel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.logging.Logger;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -25,10 +23,6 @@ import javax.swing.JTree;
  */
 public class NodeJTreeEditor {
 
-	/** logger */
-	private static final Logger LOGGER = Logger.getLogger(NodeJTreeEditor.class
-			.getName());
-
 	/** In this demo we use a counter to give a unique name for each node. */
 	private static int NodeId = 0;
 
@@ -38,14 +32,60 @@ public class NodeJTreeEditor {
 	/** UI for Tree */
 	private JTree jTree = null;
 
-	/** UI helper toolkit. */
-	private final Toolkit toolkit = Toolkit.getDefaultToolkit();
-
 	/** the add button */
-	private final JButton addButton = new JButton("Add");
+	private final JButton addButton = new JButton(new AbstractAction("Add") {
+
+		/**
+		 * serial id.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Object selObject = jTree.getLastSelectedPathComponent();
+			if ((null != selObject) && (selObject instanceof Node)) {
+
+				Object source = event.getSource();
+				if (addButton == source) {
+					Node location = (Node) jTree.getLastSelectedPathComponent();
+					Node newNode = new Node("node" + ++NodeId);
+					location.add(newNode);
+
+					// Expand the new added node
+					jTree.expandPath(location.getPathFromRoot());
+
+					// TODO MVC BUG - Update the tree view
+					jTree.updateUI();
+
+				}
+			}
+		}
+	});
 
 	/** the remove button */
-	private final JButton removeButton = new JButton("Remove");
+	private final JButton removeButton = new JButton(new AbstractAction("Remove") {
+
+		/**
+		 * serial id.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Object selObject = jTree.getLastSelectedPathComponent();
+			if ((null != selObject) && (selObject instanceof Node)) {
+
+				Object source = event.getSource();
+				if (removeButton == source) {
+					Node node = (Node) jTree.getLastSelectedPathComponent();
+					node.destroy();
+				}
+
+				// TODO MVC BUG - Update the tree view
+				jTree.updateUI();
+			}
+		}
+	});
 
 	/**
 	 * Constructor.
@@ -71,47 +111,8 @@ public class NodeJTreeEditor {
 		// Include an "Add" button to add new nodes to our tree.
 		JPanel addPanel = new JPanel();
 
-		// Add a listener to respond to events from the Buttons.
-		ActionListener actionListener = new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-
-				Object selObject = jTree.getLastSelectedPathComponent();
-				if ((null != selObject) && (selObject instanceof Node)) {
-
-					Object source = event.getSource();
-					if (addButton == source) {
-						Node location = (Node) jTree
-								.getLastSelectedPathComponent();
-						Node newNode = new Node("node" + ++NodeId);
-						location.add(newNode);
-
-						// Expand the new added node
-						jTree.expandPath(location.getPathFromRoot());
-
-					} else if (removeButton == source) {
-						Node node = (Node) jTree.getLastSelectedPathComponent();
-						node.destroy();
-					} else {
-						LOGGER.warning("Event source not known:" + source);
-						toolkit.beep();
-					}
-
-					// Update the tree view
-					jTree.updateUI();
-
-				} else {
-					LOGGER.warning("Event selected Object should be a Node:" + selObject);
-					toolkit.beep();
-				}
-
-			}
-		};
-		// Add button
-		addButton.addActionListener(actionListener);
+		// Add buttons
 		addPanel.add(addButton);
-
-		// Remove button
-		removeButton.addActionListener(actionListener);
 		addPanel.add(removeButton);
 
 		// Setup frame.

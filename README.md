@@ -6,7 +6,8 @@ PROJECT AIM(S):
 1. To provide a working example of a Mutable JTree Model so that others can make use of it.
 
 BUG(S):
-None known.
+
+1. Breaking MVC rules. Controller (NodeJTreeEditor) is making direct calls the the UI (JTree) The JTree is being notified of tree changes via a call to updateUI which is bad as it links the Controller to the UI.
 
 RULE(S):
 
