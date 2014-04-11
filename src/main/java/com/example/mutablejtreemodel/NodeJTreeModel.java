@@ -226,53 +226,55 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 		LOGGER.info("           command =" + command);
 		LOGGER.info("           ID =" + id);
 
-		if (source instanceof Node) {
-			Node node = (Node) source;
-			LOGGER.info("command type: " + command);
-			LOGGER.info("fire events: Node path from root" + node.getPathFromRoot());
+		if (!(source instanceof Node)) {
+			throw new IllegalArgumentException("Bad Source");
+		}
+		Node node = (Node) source;
+		Node parent = (Node) node.getParent();
 
-			switch (command) {
+		LOGGER.info("command type: " + command);
+		LOGGER.info("fire events: Node path from root" + node.getPathFromRoot());
 
-			case STRUCTURE_CHANGED:
-				fireStructureChanged(node.getPathFromRoot());
-				break;
+		switch (command) {
 
-			// case NODES_REMOVED:
-			// fireNodesRemoved(node.getParent().getPathToRoot(), indices,
-			// nodes);
-			// break;
+		case STRUCTURE_CHANGED:
+			fireStructureChanged(node.getPathFromRoot());
+			break;
 
-			case NODE_REMOVED:
-				// Handle root deletion attempt
-				if (node.getParent() != null){
-					fireNodeRemoved(node.getParent().getPathFromRoot(), id, node);
-				}
-				else {
-					LOGGER.info("Cannot delete Root node!");
-				}
-				break;
+		// case NODES_REMOVED:
+		// fireNodesRemoved(node.getParent().getPathToRoot(), indices,
+		// nodes);
+		// break;
 
-			// case NODES_CHANGED:
-			// fireNodesChanged(node.getParent().getPathToRoot(), indices,
-			// nodes);
-			// break;
-
-			case NODE_CHANGED:
-				fireNodeChanged(node.getParent().getPathFromRoot(), id, node);
-				break;
-
-			// case NODES_INSERTED:
-			// fireNodesInserted(node.getParent().getPathToRoot(), indices,
-			// subNodes);
-			// break;
-
-			case NODE_INSERTED:
-				fireNodeInserted(node.getParent().getPathFromRoot(), id, node);
-				break;
-
-			default:
-				LOGGER.info("Unsupported command type: " + command);
+		case NODE_REMOVED:
+			// Handle root deletion attempt
+			if (node.getParent() != null) {
+				fireNodeRemoved(parent.getPathFromRoot(), id, node);
+			} else {
+				LOGGER.info("Cannot delete Root node!");
 			}
+			break;
+
+		// case NODES_CHANGED:
+		// fireNodesChanged(node.getParent().getPathToRoot(), indices,
+		// nodes);
+		// break;
+
+		case NODE_CHANGED:
+			fireNodeChanged(parent.getPathFromRoot(), id, node);
+			break;
+
+		// case NODES_INSERTED:
+		// fireNodesInserted(node.getParent().getPathToRoot(), indices,
+		// subNodes);
+		// break;
+
+		case NODE_INSERTED:
+			fireNodeInserted(parent.getPathFromRoot(), id, node);
+			break;
+
+		default:
+			LOGGER.info("Unsupported command type: " + command);
 		}
 	}
 
@@ -349,7 +351,7 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	@Override
 	public Object getChild(Object parent, int index) {
-		Node child = ((Node) parent).getChild(index);
+		Node child = ((Node) parent).getChildAt(index);
 		LOGGER.info("getChild - parent=" + parent + ", index=" + index
 				+ ", RETURN child=" + child);
 		return child;
@@ -367,7 +369,7 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	@Override
 	public int getIndexOfChild(Object parent, Object child) {
-		int index = ((Node) parent).getIndexOfChild((Node) child);
+		int index = ((Node) parent).getIndex((Node) child);
 		LOGGER.info("getIndexOfChild - parent=" + parent + ", child=" + child
 				+ ", RETURN index=" + index);
 		return index;

@@ -4,9 +4,7 @@ package com.example.mutablejtreemodel;
 import javax.swing.tree.TreePath;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -31,34 +29,20 @@ public class NodeTest {
 		assertEquals("Setup - bagFinal count setup ", 0,
 				bagFinal.getChildCount());
 		assertNull("Setup - cookie's container", cookie.getParent());
-		assertFalse("Setup - bagStart contains cookie",
-				bagStart.isOurChild(cookie));
-		assertFalse("Setup - bagFinal contains cookie",
-				bagStart.isOurChild(cookie));
 		// add cookie to one bag
 		bagStart.add(cookie);
 		assertEquals("Start - bagStart count setup ", 1,
 				bagStart.getChildCount());
 		assertEquals("Start - bagFinal count setup ", 0,
 				bagFinal.getChildCount());
-		assertEquals("Start - cookie's container", bagStart,
-				cookie.getParent());
-		assertTrue("Start - bagStart contains cookie",
-				bagStart.isOurChild(cookie));
-		assertFalse("Start - bagFinal contains cookie",
-				bagFinal.isOurChild(cookie));
+		assertEquals("Start - cookie's container", bagStart, cookie.getParent());
 		// transfer cookie to other bag
 		bagFinal.add(cookie);
 		assertEquals("Final - bagStart count setup ", 0,
 				bagStart.getChildCount());
 		assertEquals("Final - bagFinal count setup ", 1,
 				bagFinal.getChildCount());
-		assertEquals("Final - cookie's container", bagFinal,
-				cookie.getParent());
-		assertFalse("Final - bagStart contains cookie",
-				bagStart.isOurChild(cookie));
-		assertTrue("Final - bagFinal contains cookie",
-				bagFinal.isOurChild(cookie));
+		assertEquals("Final - cookie's container", bagFinal, cookie.getParent());
 	}
 
 	/** test the destroy method */
@@ -68,14 +52,14 @@ public class NodeTest {
 		Node child = new Node("Child");
 		parent.add(child);
 		assertEquals("before - location", parent, child.getParent());
-		assertTrue("before - location contains child",
-				parent.isOurChild(child));
+		assertEquals("before - location contains child", 1,
+				parent.getChildCount());
 
 		// call destroy
 		child.destroy();
 		assertEquals("after - location", null, child.getParent());
-		assertFalse("after - location contains child",
-				parent.isOurChild(child));
+		assertEquals("after - location contains child", 0,
+				parent.getChildCount());
 	}
 
 	/** test the pathFromRoot method */
