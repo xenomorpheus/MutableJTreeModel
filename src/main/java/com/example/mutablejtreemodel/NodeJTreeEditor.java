@@ -135,11 +135,12 @@ public class NodeJTreeEditor {
 		frame.getContentPane().add(scrollpane, BorderLayout.CENTER);
 		frame.getContentPane().add(addPanel, BorderLayout.SOUTH);
 		frame.setPreferredSize(new Dimension(400, 600));
-		frame.setVisible(true);
-
+		frame.setLocationRelativeTo(null);  // This will center your app
 		// Always pack the frame after adding components.
 		// (Recommended after every change that the components may have)
 		frame.pack();
+		frame.setVisible(true);
+
 
 	}
 }
