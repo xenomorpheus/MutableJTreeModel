@@ -23,17 +23,11 @@ import javax.swing.JTree;
  */
 public class NodeJTreeEditor {
 
-	/** In this demo we use a counter to give a unique name for each node. */
-	private static int NodeId = 0;
+	static final String KEY_JTREE = "jTree";
+	static final String KEY_NODE_ID = "Node Id";
 
-	/** the interface between a JTree and our tree of nodes. */
-	private NodeJTreeModel treeModel = null;
-
-	/** UI for Tree */
-	private JTree jTree = null;
-
-	/** the add button */
-	private final JButton addButton = new JButton(new AbstractAction("Add") {
+	/** The add button's action. */
+	AbstractAction addButtonAction = new AbstractAction("Add") {
 
 		/**
 		 * serial id.
@@ -42,10 +36,23 @@ public class NodeJTreeEditor {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			/** The JTree we are working on. */
+			JTree jTree = (JTree) getValue(KEY_JTREE);
+
+			/**
+			 * In this demo we use a counter to give a unique name for each
+			 * node.
+			 */
+			Integer NodeId = (Integer) getValue(KEY_NODE_ID);
+			if (NodeId == null) {
+				NodeId = 0;
+			}
+
 			Object selObject = jTree.getLastSelectedPathComponent();
 			if ((null != selObject) && (selObject instanceof Node)) {
 				Node location = (Node) jTree.getLastSelectedPathComponent();
 				Node newNode = new Node("node" + ++NodeId);
+				putValue(KEY_NODE_ID, NodeId);
 				location.add(newNode);
 
 				// Expand the new added node
@@ -55,11 +62,13 @@ public class NodeJTreeEditor {
 				jTree.updateUI();
 			}
 		}
-	});
+	};
+	
+	/** The add button. */
+	private final JButton addButton = new JButton(addButtonAction);
 
-	/** the remove button */
-	private final JButton removeButton = new JButton(new AbstractAction(
-			"Remove") {
+	/** The remove button's action. */
+	AbstractAction removeButtonAction = new AbstractAction("Remove") {
 
 		/**
 		 * serial id.
@@ -68,6 +77,7 @@ public class NodeJTreeEditor {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			JTree jTree = (JTree) getValue(KEY_JTREE);
 			Object selObject = jTree.getLastSelectedPathComponent();
 			if ((null != selObject) && (selObject instanceof Node)) {
 
@@ -78,7 +88,10 @@ public class NodeJTreeEditor {
 				jTree.updateUI();
 			}
 		}
-	});
+	};
+
+	/** The remove button. */
+	private final JButton removeButton = new JButton(removeButtonAction);
 
 	/**
 	 * Constructor.
@@ -87,6 +100,12 @@ public class NodeJTreeEditor {
 	 *            the root node in the tree.
 	 */
 	public NodeJTreeEditor(Node rootNode) {
+		/** the interface between a UI JTree and our tree of nodes. */
+		NodeJTreeModel treeModel = null;
+
+		/** UI for Tree */
+		JTree jTree = null;
+
 		// Create a TreeModel as the interface between a JTree and our tree of
 		// nodes.
 		treeModel = new NodeJTreeModel();
@@ -104,8 +123,10 @@ public class NodeJTreeEditor {
 		// Include an "Add" button to add new nodes to our tree.
 		JPanel addPanel = new JPanel();
 
-		// Add buttons
+		// Add the Add and Remove buttons to the component.
+		addButtonAction.putValue(KEY_JTREE, jTree);
 		addPanel.add(addButton);
+		removeButtonAction.putValue(KEY_JTREE, jTree);
 		addPanel.add(removeButton);
 
 		// Setup frame.
