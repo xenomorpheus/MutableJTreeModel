@@ -15,7 +15,7 @@ import javax.swing.tree.TreePath;
 /**
  * A node in a tree structure.
  * 
- * Nodes will fire change events to listeners which can be other nodes, or
+ * Nodes will fire change events to listeners e.g. other nodes or 
  * JTreeModel objects.
  * 
  * @author xenomorpheus
@@ -38,8 +38,9 @@ public class Node extends DefaultMutableTreeNode implements ActionListener {
 	private String name;
 
 	/**
-	 * Those that listen for changes to the model. E.g. other nodes or
-	 * JTreeModel. Using weak references for listener set. It's very easy to
+	 * Those that listen for changes to this node. E.g. other nodes or
+	 * JTreeModel. <br>
+	 * TODO Using weak references for listener set. It's very easy to
 	 * forget removing listeners when the actual instance isn't in use any more
 	 * and thats a source of memory leak.
 	 */
