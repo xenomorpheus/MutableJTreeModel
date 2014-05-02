@@ -2,6 +2,7 @@
 package com.example.mutablejtreemodel;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
@@ -49,8 +50,12 @@ public class NodeJTreeModelDemo {
 		JFrame frame = new JFrame("MyNode Creator");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(scrollpane, BorderLayout.CENTER);
-		frame.setSize(200, 100);
-		frame.setVisible(true);
+		frame.setPreferredSize(new Dimension(400, 600));
+		frame.setLocationRelativeTo(null);  // This will center your app
+		// Always pack the frame after adding components.
+		// (Recommended after every change that the components may have)
+		frame.pack();
+		frame.setVisible(true);	
 	}
 
 	/**
@@ -76,7 +81,7 @@ public class NodeJTreeModelDemo {
 			for (int j = 0; j < 1; j++) {
 				child = new Node("CHILD_NODE_" + i + "_" + j);
 				LOGGER.info("********************************************");
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 				parent.add(child);
 			}
 			parent = child;
