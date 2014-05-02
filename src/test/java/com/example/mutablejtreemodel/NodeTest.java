@@ -1,10 +1,14 @@
 /** This document is AS-IS. No claims are made for suitability for any purpose. */
 package com.example.mutablejtreemodel;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
 import javax.swing.tree.TreePath;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -73,6 +77,84 @@ public class NodeTest {
 		TreePath got = child.getPathFromRoot();
 		TreePath expected = new TreePath(new Node[] { root, parent, child });
 		assertEquals("path", expected, got);
+	}
+
+	/** test add informs the listener */
+	@Test
+	public void testAddFiresAction() {
+		final String listenerCountKey = "listenerCountKey";
+		AbstractAction childAction = new AbstractAction() {
+			/** serial id. */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				Integer listenerCount = (Integer) getValue(listenerCountKey);
+				putValue(listenerCountKey, listenerCount + 1);
+			}
+		};
+		AbstractAction parentAction = new AbstractAction() {
+			/** serial id. */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				Integer listenerCount = (Integer) getValue(listenerCountKey);
+				putValue(listenerCountKey, listenerCount + 1);
+			}
+		};
+		parentAction.putValue(listenerCountKey, 0);
+		Node parent = new Node("Parent");
+		parent.addActionListener(parentAction);
+		Node child = new Node("Child");
+		childAction.putValue(listenerCountKey, 0);
+		child.addActionListener(childAction);
+		parent.add(child);
+		assertTrue("parent count",
+				(Integer) parentAction.getValue(listenerCountKey) > 0);
+		// assertTrue("child count",(Integer)
+		// childAction.getValue(listenerCountKey) > 0);
+	}
+
+	/** test add informs the listener */
+	@Test
+	public void testRemmoveFiresAction() {
+		final String listenerCountKey = "listenerCountKey";
+		AbstractAction childAction = new AbstractAction() {
+			/** serial id. */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				Integer listenerCount = (Integer) getValue(listenerCountKey);
+				putValue(listenerCountKey, listenerCount + 1);
+			}
+		};
+		AbstractAction parentAction = new AbstractAction() {
+			/** serial id. */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				Integer listenerCount = (Integer) getValue(listenerCountKey);
+				putValue(listenerCountKey, listenerCount + 1);
+			}
+		};
+		Node parent = new Node("Parent");
+		Node child = new Node("Child");
+		parent.add(child);
+		// listeners added now so that counters are at zero
+		parentAction.putValue(listenerCountKey, 0);
+		childAction.putValue(listenerCountKey, 0);
+		parent.addActionListener(parentAction);
+		child.addActionListener(childAction);
+		// perform action
+		parent.remove(child);
+		// test result
+		assertTrue("parent count",
+				(Integer) parentAction.getValue(listenerCountKey) > 0);
+		assertTrue("child count",
+				(Integer) childAction.getValue(listenerCountKey) > 0);
 	}
 
 }
