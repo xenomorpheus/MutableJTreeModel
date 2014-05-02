@@ -11,6 +11,7 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * Objects of this class form an adapter between a JTree and the model, that
@@ -319,6 +320,11 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	@Override
 	public boolean isLeaf(Object node) {
+		if (!(node instanceof Node)) {
+			throw new IllegalArgumentException("Expecting node to be of class "
+					+ Node.class.getCanonicalName() + ", but I got "
+					+ node.getClass().getCanonicalName());
+		}
 		return ((Node) node).isLeaf();
 	}
 
@@ -333,6 +339,11 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	@Override
 	public int getChildCount(Object node) {
+		if (!(node instanceof Node)) {
+			throw new IllegalArgumentException("Expecting node to be of class "
+					+ Node.class.getCanonicalName() + ", but I got "
+					+ node.getClass().getCanonicalName());
+		}
 		int count = ((Node) node).getChildCount();
 		LOGGER.info("node='" + node + "', count=" + count);
 		return count;
@@ -351,7 +362,14 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	@Override
 	public Object getChild(Object parent, int index) {
-		Node child = ((Node) parent).getChildAt(index);
+		if (!(parent instanceof DefaultMutableTreeNode)) {
+			throw new IllegalArgumentException(
+					"Expecting parent to be of class "
+							+ DefaultMutableTreeNode.class.getCanonicalName()
+							+ ", but I got "
+							+ parent.getClass().getCanonicalName());
+		}
+		Object child = ((DefaultMutableTreeNode) parent).getChildAt(index);
 		LOGGER.info("getChild - parent=" + parent + ", index=" + index
 				+ ", RETURN child=" + child);
 		return child;
@@ -369,6 +387,18 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	@Override
 	public int getIndexOfChild(Object parent, Object child) {
+		if (!(parent instanceof Node)) {
+			throw new IllegalArgumentException(
+					"Expecting parent to be of class "
+							+ Node.class.getCanonicalName() + ", but I got "
+							+ parent.getClass().getCanonicalName());
+		}
+		if (!(child instanceof Node)) {
+			throw new IllegalArgumentException(
+					"Expecting child to be of class "
+							+ Node.class.getCanonicalName() + ", but I got "
+							+ child.getClass().getCanonicalName());
+		}
 		int index = ((Node) parent).getIndex((Node) child);
 		LOGGER.info("getIndexOfChild - parent=" + parent + ", child=" + child
 				+ ", RETURN index=" + index);
