@@ -4,11 +4,10 @@ package com.example.mutablejtreemodel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -22,7 +21,10 @@ import javax.swing.tree.TreePath;
  * @author xenomorpheus
  * @version $Revision: 1.0 $
  */
-public class Node implements MutableTreeNode, ActionListener {
+public class Node extends DefaultMutableTreeNode implements ActionListener {
+
+	/** serial id. */
+	private static final long serialVersionUID = 1L;
 
 	/** class logger */
 	private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
@@ -34,12 +36,6 @@ public class Node implements MutableTreeNode, ActionListener {
 
 	/** The human identifiable name of this node. */
 	private String name;
-
-	/** Our parent node. */
-	private MutableTreeNode parent;
-
-	/** The child nodes of this node. */
-	private List<Node> children;
 
 	/**
 	 * Those that listen for changes to the model. E.g. other nodes or
@@ -56,8 +52,8 @@ public class Node implements MutableTreeNode, ActionListener {
 	 *            the human identifiable name of this node.
 	 */
 	public Node(String name) {
+		super();
 		this.name = name;
-		children = new ArrayList<>();
 		listeners = new ArrayList<>();
 	}
 
@@ -79,138 +75,41 @@ public class Node implements MutableTreeNode, ActionListener {
 
 	// MutableTreeNode
 	@Override
-	public void setParent(MutableTreeNode newParent) {
-		parent = newParent;
-	}
-
-	// MutableTreeNode
-	@Override
-	public MutableTreeNode getParent() {
-		return parent;
-	}
-
-	// MutableTreeNode
-	@Override
-	public boolean isLeaf() {
-
-		// This will generate the 'file' icon for the leafs,
-		// and the folder icons for the non-leafs.Also, you will probably need
-		// the implementation later.
-		return children.isEmpty();
-	}
-
-	// MutableTreeNode
-	@Override
-	public Enumeration<Node> children() {
-		return Collections.enumeration(children);
-	}
-
-	// MutableTreeNode
-	@Override
-	public int getChildCount() {
-		synchronized (objLock) {
-			return children.size();
-		}
-	}
-
-	// MutableTreeNode
-	@Override
-	public Node getChildAt(int childIndex) {
-		synchronized (objLock) {
-			Node child = children.get(childIndex);
-			LOGGER.info("At index=" + childIndex + " found child named '"
-					+ child.name + "'");
-			return child;
-		}
-	}
-
-	// MutableTreeNode
-	@Override
-	public int getIndex(TreeNode child) {
-		Node childNode = (Node) child;
-		synchronized (objLock) {
-			int index = children.indexOf(child);
-			LOGGER.info("getIndexOfChild: In node '" + name + "' found child "
-					+ childNode.name + " at index " + index);
-			return index;
-		}
-	}
-
-	// MutableTreeNode
-	@Override
-	public boolean getAllowsChildren() {
-		return true;
-	}
-
-	/**
-	 * Add the child node to the end of a list of children nodes.
-	 * 
-	 * @param child
-	 *            new child node.
-	 */
-	public void add(MutableTreeNode child) {
-		insert(child, children.size());
-	}
-
-	// MutableTreeNode
-	@Override
 	public void insert(MutableTreeNode child, int index) {
-		LOGGER.info("Parent='" + name + "', child='" + child + "' at index="
+		LOGGER.info("This='" + this + "', child='" + child + "' at index="
 				+ index);
-		Node childNode = (Node) child;
-		synchronized (objLock) {
-			// child node from current parent, if any.
-			MutableTreeNode currentContainer = childNode.getParent();
-			if (null != currentContainer) {
-				currentContainer.remove(child);
-			}
-			// add child to children.
-			children.add(index, childNode);
 
-			childNode.setParent((MutableTreeNode) this);
+		// old parent, if any.
+		super.insert(child, index);
 
-			// We listen for changes on nodes we hold.
-			childNode.addActionListener(this);
-			// We inform listeners that we have changed because we have a new
-			// node.
-			fireNodeChanged(new ActionEvent(child, index,
-					NodeChangeType.NODE_INSERTED.toString()));
-		}
+		// We inform listeners that we have changed because we have a new
+		// node.
+		// TODO should this be child, parent or both?
+		fireNodeChanged(new ActionEvent(child, index,
+				NodeChangeType.NODE_INSERTED.toString()));
 	}
 
 	// MutableTreeNode
 	@Override
-	public void remove(MutableTreeNode node) {
-		Node child = (Node) node;
+	public void remove(MutableTreeNode aChild) {
 		LOGGER.info("remove node=" + this);
-		synchronized (objLock) {
-			children.remove(child);
-			child.setParent(null);
-
-			// Stop listening to child node.
-			child.removeActionListener(this);
+		if (!(aChild instanceof Node)) {
+			throw new IllegalArgumentException("Expecting node to be of class "
+					+ Node.class.getCanonicalName() + ", but I got "
+					+ aChild.getClass().getCanonicalName());
 		}
-	}
 
-	// MutableTreeNode
-	@Override
-	public void remove(int index) {
-		MutableTreeNode node = (MutableTreeNode) children.get(index);
-		remove(node);
-	}
+		super.remove(aChild);
 
-	// MutableTreeNode
-	@Override
-	public void setUserObject(Object object) {
-		// TODO Auto-generated method stub
+		Node child = (Node) aChild;
 
-	}
-
-	// MutableTreeNode
-	@Override
-	public void removeFromParent() {
-		((Node) parent).remove((MutableTreeNode) this);
-
+		// We inform listeners that we have changed nodes.
+		// TODO should this be child, parent or both?
+		// TODO should we be passing the node as a parameter?
+		child.fireNodeChanged(new ActionEvent(child, 0,
+				NodeChangeType.NODE_CHANGED.toString()));
+		fireNodeChanged(new ActionEvent(this, 0,
+				NodeChangeType.NODE_CHANGED.toString()));
 	}
 
 	/**
@@ -218,12 +117,12 @@ public class Node implements MutableTreeNode, ActionListener {
 	 */
 
 	public TreePath getPathFromRoot() {
-		TreeNode node = (TreeNode) this;
+		TreeNode nodePtr = this;
 		ArrayList<TreeNode> nodeArrayList = new ArrayList<>();
 		synchronized (objLock) {
-			while ((null != node)) {
-				nodeArrayList.add(0, node);
-				node = node.getParent();
+			while ((null != nodePtr)) {
+				nodeArrayList.add(0, nodePtr);
+				nodePtr = nodePtr.getParent();
 			}
 			return new TreePath(nodeArrayList.toArray(new Node[nodeArrayList
 					.size()]));
@@ -238,7 +137,7 @@ public class Node implements MutableTreeNode, ActionListener {
 	 *            event.
 	 */
 	private void fireNodeChanged(ActionEvent e) {
-		LOGGER.info("fireTreeNodeChanged node='" + this + "'");
+		LOGGER.info("fireTreeNodeChanged this='" + this + "'");
 		ActionListener[] tmpListeners = null;
 		// Don't leak the lock.
 		synchronized (objLock) {
@@ -251,14 +150,14 @@ public class Node implements MutableTreeNode, ActionListener {
 	}
 
 	/**
-	 * Remove a listener from the list that wish to listen to events involving
-	 * this node.
+	 * Add a listener from the list that wish to listen to events involving this
+	 * node.
 	 * 
 	 * @param listener
 	 *            listener to add.
 	 */
 	public void addActionListener(ActionListener listener) {
-		LOGGER.info("addActionListener for '" + this + "', listener='"
+		LOGGER.info("addActionListener for this='" + this + "', listener='"
 				+ listener + "'");
 		synchronized (objLock) {
 			listeners.add(listener);
@@ -273,7 +172,7 @@ public class Node implements MutableTreeNode, ActionListener {
 	 *            listener to remove.
 	 */
 	public void removeActionListener(ActionListener listener) {
-		LOGGER.info("removeActionListener for '" + this + "', listener="
+		LOGGER.info("removeActionListener for this='" + this + "', listener="
 				+ listener);
 		synchronized (objLock) {
 			listeners.remove(listener);
@@ -305,7 +204,7 @@ public class Node implements MutableTreeNode, ActionListener {
 		// If parent still set, remove this node from parent.
 		synchronized (objLock) {
 			if (null != parent) {
-				parent.remove((MutableTreeNode) this);
+				parent.remove(this);
 			}
 		}
 		// TODO free resources of this node at this subtype.
