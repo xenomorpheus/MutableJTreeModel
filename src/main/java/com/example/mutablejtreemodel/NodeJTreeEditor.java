@@ -100,19 +100,13 @@ public class NodeJTreeEditor {
 	 *            the root node in the tree.
 	 */
 	public NodeJTreeEditor(Node rootNode) {
-		/** the interface between a UI JTree and our tree of nodes. */
-		NodeJTreeModel treeModel = null;
-
-		/** UI for Tree */
-		JTree jTree = null;
-
 		// Create a TreeModel as the interface between a JTree and our tree of
 		// nodes.
-		treeModel = new NodeJTreeModel();
+		NodeJTreeModel treeModel = new NodeJTreeModel();
 		treeModel.setRoot(rootNode);
 
-		// Create a JTree and tell it to display our model
-		jTree = new JTree();
+		// UI for Tree. Create a JTree and tell it to display our model
+		JTree jTree = new JTree();
 		jTree.setModel(treeModel);
 		jTree.setEditable(true);
 		jTree.setSelectionRow(0);
@@ -120,20 +114,18 @@ public class NodeJTreeEditor {
 		// The JTree can get big, so allow it to scroll.
 		JScrollPane scrollpane = new JScrollPane(jTree);
 
-		// Include an "Add" button to add new nodes to our tree.
-		JPanel addPanel = new JPanel();
-
-		// Add the Add and Remove buttons to the component.
+		// A control panel for buttons to add and remove nodes.
+		JPanel controlPanel = new JPanel();
 		addButtonAction.putValue(KEY_JTREE, jTree);
-		addPanel.add(addButton);
+		controlPanel.add(addButton);
 		removeButtonAction.putValue(KEY_JTREE, jTree);
-		addPanel.add(removeButton);
+		controlPanel.add(removeButton);
 
 		// Setup frame.
 		JFrame frame = new JFrame("MyNode Creator");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(scrollpane, BorderLayout.CENTER);
-		frame.getContentPane().add(addPanel, BorderLayout.SOUTH);
+		frame.getContentPane().add(controlPanel, BorderLayout.SOUTH);
 		frame.setPreferredSize(new Dimension(400, 600));
 		frame.setLocationRelativeTo(null);  // This will center your app
 		// Always pack the frame after adding components.

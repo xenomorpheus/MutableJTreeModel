@@ -1,8 +1,6 @@
 /** This document is AS-IS. No claims are made for suitability for any purpose. */
 package com.example.mutablejtreemodel;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -22,7 +20,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * @author xenomorpheus
  * @version $Revision: 1.0 $
  **/
-public class NodeJTreeModel implements TreeModel, ActionListener {
+public class NodeJTreeModel implements TreeModel, TreeModelListener {
 
 	/** class logger */
 	private static final Logger LOGGER = Logger.getLogger(NodeJTreeModel.class
@@ -73,211 +71,10 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	public void setRoot(Node root) {
 		this.root = root;
-		root.addActionListener(this);
+		root.addListener(this);
 	}
 
 	// Misc methods
-	/**
-	 * Notifies the listener that the structure below a given node has been
-	 * completely changed.
-	 * 
-	 * @param path
-	 *            the sequence of nodes that lead up the tree to the root node.
-	 */
-	private void fireStructureChanged(TreePath path) {
-		TreeModelEvent event = new TreeModelEvent(this, path);
-		TreeModelListener[] tmpListeners = null;
-		// Don't leak the lock.
-		synchronized (objLock) {
-			tmpListeners = listeners.toArray(new TreeModelListener[listeners
-					.size()]);
-		}
-		for (TreeModelListener lis : tmpListeners) {
-			lis.treeStructureChanged(event);
-		}
-	}
-
-	/**
-	 * Notifies the listener that some nodes have been removed below a node.
-	 * 
-	 * @param parentPath
-	 *            the sequence of nodes from the parent node to the root node.
-	 * @param indices
-	 * @param nodes
-	 */
-	private void fireNodesRemoved(TreePath parentPath, int[] indices,
-			Object[] nodes) {
-		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices,
-				nodes);
-
-		TreeModelListener[] tmpListeners = null;
-		// Don't leak the lock.
-		synchronized (objLock) {
-			tmpListeners = listeners.toArray(new TreeModelListener[listeners
-					.size()]);
-		}
-		for (TreeModelListener lis : tmpListeners) {
-			lis.treeNodesRemoved(event);
-		}
-	}
-
-	/**
-	 * Notifies the listener that a particular node has been removed.
-	 * 
-	 * @param path
-	 * @param index
-	 * @param node
-	 */
-	private void fireNodeRemoved(TreePath path, int index, Object node) {
-		fireNodesRemoved(path, new int[] { index }, new Object[] { node });
-	}
-
-	/**
-	 * Notifies the listener that the appearance of some sub-nodes a node has
-	 * changed.
-	 * 
-	 * @param parentPath
-	 * @param indices
-	 * @param nodes
-	 */
-	private void fireNodesChanged(TreePath parentPath, int[] indices,
-			Object[] nodes) {
-		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices,
-				nodes);
-		TreeModelListener[] tmpListeners = null;
-		// Don't leak the lock.
-		synchronized (objLock) {
-			tmpListeners = listeners.toArray(new TreeModelListener[listeners
-					.size()]);
-		}
-		for (TreeModelListener lis : tmpListeners) {
-			lis.treeNodesChanged(event);
-		}
-	}
-
-	/**
-	 * Notifies the listener that the appearance of a node has changed.
-	 * 
-	 * @param parentPath
-	 *            the path of the parent node of the relevant node.
-	 * @param index
-	 *            the index of the node under the parent node. If <0, the
-	 *            listener will not be notified.
-	 * @param node
-	 *            the subnode.
-	 */
-	private void fireNodeChanged(TreePath parentPath, int index, Object node) {
-		if (index >= 0) {
-			fireNodesChanged(parentPath, new int[] { index },
-					new Object[] { node });
-		}
-	}
-
-	/**
-	 * Notifies listeners that below a node, some nodes were inserted.
-	 * 
-	 * @param parentPath
-	 *            TreePath
-	 * @param indices
-	 *            int[]
-	 * @param subNodes
-	 *            Object[]
-	 */
-	private void fireNodesInserted(TreePath parentPath, int[] indices,
-			Object[] subNodes) {
-		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices,
-				subNodes);
-		TreeModelListener[] tmpListeners = null;
-		// Don't leak the lock.
-		synchronized (objLock) {
-			tmpListeners = listeners.toArray(new TreeModelListener[listeners
-					.size()]);
-		}
-		for (TreeModelListener lis : tmpListeners) {
-			lis.treeNodesInserted(event);
-		}
-	}
-
-	/**
-	 * Notifies the listener that a node has been inserted.
-	 * 
-	 * @param parentPath
-	 * @param index
-	 * @param node
-	 */
-	private void fireNodeInserted(TreePath parentPath, int index, Object node) {
-		fireNodesInserted(parentPath, new int[] { index },
-				new Object[] { node });
-	}
-
-	/**
-	 * Method actionPerformed.
-	 * 
-	 * @param e
-	 *            ActionEvent
-	 * @see java.awt.event.ActionListener#actionPerformed(ActionEvent)
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-		NodeChangeType command = NodeChangeType.get(e.getActionCommand());
-		int id = e.getID();
-		LOGGER.info("actionPerformed was called: " + e);
-		LOGGER.info("           source =" + source);
-		LOGGER.info("           command =" + command);
-		LOGGER.info("           ID =" + id);
-
-		if (!(source instanceof Node)) {
-			throw new IllegalArgumentException("Bad Source");
-		}
-		Node node = (Node) source;
-		Node parent = (Node) node.getParent();
-
-		LOGGER.info("command type: " + command);
-		LOGGER.info("fire events: Node path from root" + node.getPathFromRoot());
-
-		switch (command) {
-
-		case STRUCTURE_CHANGED:
-			fireStructureChanged(node.getPathFromRoot());
-			break;
-
-		// case NODES_REMOVED:
-		// fireNodesRemoved(node.getParent().getPathToRoot(), indices,
-		// nodes);
-		// break;
-
-		case NODE_REMOVED:
-			// Handle root deletion attempt
-			if (node.getParent() != null) {
-				fireNodeRemoved(parent.getPathFromRoot(), id, node);
-			} else {
-				LOGGER.info("Cannot delete Root node!");
-			}
-			break;
-
-		// case NODES_CHANGED:
-		// fireNodesChanged(node.getParent().getPathToRoot(), indices,
-		// nodes);
-		// break;
-
-		case NODE_CHANGED:
-			fireNodeChanged(parent.getPathFromRoot(), id, node);
-			break;
-
-		// case NODES_INSERTED:
-		// fireNodesInserted(node.getParent().getPathToRoot(), indices,
-		// subNodes);
-		// break;
-
-		case NODE_INSERTED:
-			fireNodeInserted(parent.getPathFromRoot(), id, node);
-			break;
-
-		default:
-			LOGGER.info("Unsupported command type: " + command);
-		}
-	}
 
 	/**
 	 * Method addTreeModelListener.
@@ -428,6 +225,30 @@ public class NodeJTreeModel implements TreeModel, ActionListener {
 	 */
 	public String toString() {
 		return this.getClass().getSimpleName();
+	}
+
+	@Override
+	public void treeNodesChanged(TreeModelEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeNodesInserted(TreeModelEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeNodesRemoved(TreeModelEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeStructureChanged(TreeModelEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
