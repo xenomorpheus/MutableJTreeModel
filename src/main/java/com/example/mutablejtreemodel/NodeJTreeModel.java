@@ -227,28 +227,108 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 		return this.getClass().getSimpleName();
 	}
 
+	// http://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html#treeNodesRemoved-javax.swing.event.TreeModelEvent-
+	/**
+	 * Notify listeners that node(s) have changed.
+	 * 
+	 * @param e
+	 *            event
+	 */
+
+	private void fireTreeNodesChanged(TreeModelEvent e) {
+
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener listener : tmpListeners) {
+			listener.treeNodesChanged(e);
+		}
+	}
+
+	/**
+	 * Notify listeners that node(s) have been inserted.
+	 * 
+	 * @param parent
+	 *            the parent node.
+	 * @param childIndexes
+	 *            indexes of children be inserted, ascending order.
+	 * @param children
+	 *            array of the inserted children.
+	 */
+
+	private void fireTreeNodesInserted(TreeModelEvent e) {
+
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener listener : tmpListeners) {
+			listener.treeNodesInserted(e);
+		}
+	}
+
+	/**
+	 * Notify listeners that node(s) have been removed.
+	 * 
+	 * @param e
+	 *            event
+	 */
+
+	private void fireTreeNodesRemoved(TreeModelEvent e) {
+
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener listener : tmpListeners) {
+			listener.treeNodesRemoved(e);
+		}
+	}
+
+	/**
+	 * Notify listeners that node(s) have changed structure.
+	 * 
+	 * @param e
+	 *            event
+	 */
+	private void fireTreeStructureChanged(TreeModelEvent e) {
+
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener listener : tmpListeners) {
+			listener.treeStructureChanged(e);
+		}
+	}
+
 	@Override
 	public void treeNodesChanged(TreeModelEvent e) {
-		// TODO Auto-generated method stub
-		
+		fireTreeNodesChanged(e);
 	}
 
 	@Override
 	public void treeNodesInserted(TreeModelEvent e) {
-		// TODO Auto-generated method stub
-		
+		fireTreeNodesInserted(e);
 	}
 
 	@Override
 	public void treeNodesRemoved(TreeModelEvent e) {
-		// TODO Auto-generated method stub
-		
+		fireTreeNodesRemoved(e);
 	}
 
 	@Override
 	public void treeStructureChanged(TreeModelEvent e) {
-		// TODO Auto-generated method stub
-		
+		fireTreeStructureChanged(e);
 	}
 
 }

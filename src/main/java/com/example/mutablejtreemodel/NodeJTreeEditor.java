@@ -57,13 +57,10 @@ public class NodeJTreeEditor {
 
 				// Expand the new added node
 				jTree.expandPath(location.getPathFromRoot());
-
-				// TODO MVC BUG - Update the tree view
-				jTree.updateUI();
 			}
 		}
 	};
-	
+
 	/** The add button. */
 	private final JButton addButton = new JButton(addButtonAction);
 
@@ -83,9 +80,6 @@ public class NodeJTreeEditor {
 
 				Node node = (Node) jTree.getLastSelectedPathComponent();
 				node.destroy();
-
-				// TODO MVC BUG - Update the tree view
-				jTree.updateUI();
 			}
 		}
 	};
@@ -127,12 +121,11 @@ public class NodeJTreeEditor {
 		frame.getContentPane().add(scrollpane, BorderLayout.CENTER);
 		frame.getContentPane().add(controlPanel, BorderLayout.SOUTH);
 		frame.setPreferredSize(new Dimension(400, 600));
-		frame.setLocationRelativeTo(null);  // This will center your app
+		frame.setLocationRelativeTo(null); // This will center your app
 		// Always pack the frame after adding components.
 		// (Recommended after every change that the components may have)
 		frame.pack();
 		frame.setVisible(true);
-
 
 	}
 }

@@ -84,8 +84,8 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		super.insert(child, index);
 
 		// Inform our listeners that we have inserted node(s).
-		TreeModelEvent e = new TreeModelEvent(this, getPathFromRoot(),  new int[] { index },
-				new TreeNode[] { child });
+		TreeModelEvent e = new TreeModelEvent(this, getPathFromRoot(),
+				new int[] { index }, new TreeNode[] { child });
 		fireTreeNodesInserted(e);
 	}
 
@@ -102,8 +102,12 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		int index = getIndex(child);
 		super.remove(child);
 		// Inform listeners that we have removed node(s).
-		fireTreeNodesRemoved(this, new int[] { index },
-				new TreeNode[] { child });
+		TreeModelEvent e = new TreeModelEvent(this, getPathFromRoot(),
+				new int[] { index }, new TreeNode[] { child });
+		LOGGER.info("remove node=" + this+ " fire event "+e);
+		
+
+		fireTreeNodesRemoved(e);
 	}
 
 	/**
@@ -182,6 +186,25 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	}
 
 	// http://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html#treeNodesRemoved-javax.swing.event.TreeModelEvent-
+	/**
+	 * Notify listeners that node(s) have changed.
+	 * 
+	 * @param e
+	 *            event
+	 */
+
+	private void fireTreeNodesChanged(TreeModelEvent e) {
+
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener listener : tmpListeners) {
+			listener.treeNodesChanged(e);
+		}
+	}
 
 	/**
 	 * Notify listeners that node(s) have been inserted.
@@ -210,18 +233,11 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	/**
 	 * Notify listeners that node(s) have been removed.
 	 * 
-	 * @param parent
-	 *            the parent node.
-	 * @param childIndexes
-	 *            indexes of children be removed, ascending order.
-	 * @param children
-	 *            array of the removed children.
+	 * @param e
+	 *            event
 	 */
 
-	private void fireTreeNodesRemoved(TreeNode parent, int[] childIndexes,
-			TreeNode[] children) {
-		TreeModelEvent e = new TreeModelEvent(this,
-				((Node) parent).getPathFromRoot(), childIndexes, children);
+	private void fireTreeNodesRemoved(TreeModelEvent e) {
 
 		TreeModelListener[] tmpListeners = null;
 		// Don't leak the lock.
@@ -234,27 +250,44 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		}
 	}
 
+	/**
+	 * Notify listeners that node(s) have changed structure.
+	 * 
+	 * @param e
+	 *            event
+	 */
+	private void fireTreeStructureChanged(TreeModelEvent e) {
+
+		TreeModelListener[] tmpListeners = null;
+		// Don't leak the lock.
+		synchronized (objLock) {
+			tmpListeners = listeners.toArray(new TreeModelListener[listeners
+					.size()]);
+		}
+		for (TreeModelListener listener : tmpListeners) {
+			listener.treeStructureChanged(e);
+		}
+	}
+
 	@Override
 	public void treeNodesChanged(TreeModelEvent e) {
-		// TODO Auto-generated method stub
+		fireTreeNodesChanged(e);
 
 	}
 
 	@Override
 	public void treeNodesInserted(TreeModelEvent e) {
-		// TODO Auto-generated method stub
+		fireTreeNodesInserted(e);
 
 	}
 
 	@Override
 	public void treeNodesRemoved(TreeModelEvent e) {
-		// TODO Auto-generated method stub
-
+		fireTreeNodesRemoved(e);
 	}
 
 	@Override
 	public void treeStructureChanged(TreeModelEvent e) {
-		// TODO Auto-generated method stub
-
+		fireTreeStructureChanged(e);
 	}
 }
