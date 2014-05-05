@@ -11,11 +11,9 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 
 /**
- * This version automatically add nodes, which removes the button logic
- * as a possible cause of the bugs.
- * 
- * Also this version tries to separate the UI thread from the thread that 
- * changes the Model.
+ * This version automatically add nodes. This is a simplified version that
+ * removes the button logic, and hence button events as a possible cause of
+ * bugs.
  * 
  * @author xenomorpheus
  * @version $Revision: 1.0 $
@@ -29,13 +27,16 @@ public class NodeJTreeModelDemo {
 
 	/**
 	 * Method startSwing.
-	 * @param root the root Node.
+	 * 
+	 * @param root
+	 *            the root Node.
 	 */
 	private void startSwing(Node root) {
 
 		/** The link between our nodes and the UI JTree */
 		NodeJTreeModel treeModel = new NodeJTreeModel();
 		treeModel.setRoot(root);
+		// TODO consider root.addListener(treeModel);
 
 		// Create a JTree and tell it to display our model
 		JTree jTree = new JTree();
@@ -51,11 +52,11 @@ public class NodeJTreeModelDemo {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(scrollpane, BorderLayout.CENTER);
 		frame.setPreferredSize(new Dimension(400, 600));
-		frame.setLocationRelativeTo(null);  // This will center your app
+		frame.setLocationRelativeTo(null); // This will center your app
 		// Always pack the frame after adding components.
 		// (Recommended after every change that the components may have)
 		frame.pack();
-		frame.setVisible(true);	
+		frame.setVisible(true);
 	}
 
 	/**
@@ -64,12 +65,14 @@ public class NodeJTreeModelDemo {
 	 * @param argv
 	 *            command line arguments. Not used.
 	 * 
-	 * @throws InterruptedException */
+	 * @throws InterruptedException
+	 */
 	public static void main(String[] argv) throws InterruptedException {
 		Node parent = ROOT;
 		Node child = null;
 
-		// Trying to put the UI on a different thread to the one that changes the Model.
+		// Trying to put the UI on a different thread to the one that changes
+		// the Model.
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				NodeJTreeModelDemo demo = new NodeJTreeModelDemo();
@@ -87,5 +90,4 @@ public class NodeJTreeModelDemo {
 			parent = child;
 		}
 	}
-
 }
