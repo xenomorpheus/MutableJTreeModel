@@ -6,6 +6,7 @@ PROJECT AIM(S):
 1. To provide a working example of a Mutable JTree Model so that others can make use of it.
 
 BUG(S):
+
 Probably but none reported yet.
 
 RULE(S):
