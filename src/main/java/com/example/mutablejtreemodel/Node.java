@@ -72,6 +72,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	 */
 	public void setName(String name) {
 		this.name = name;
+		// TODO fireTreeNodesChanged();
 	}
 
 	// MutableTreeNode
@@ -80,7 +81,11 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		LOGGER.info("This='" + this + "', child='" + child + "' at index="
 				+ index);
 
-		// TODO remove from existing parent, if any.
+		// If child has existing parent then remove it.
+		Node oldParent = (Node)child.getParent();
+		if (oldParent != null){
+			oldParent.remove(child);
+		}
 		super.insert(child, index);
 
 		// Inform our listeners that we have inserted node(s).
@@ -104,8 +109,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		// Inform listeners that we have removed node(s).
 		TreeModelEvent e = new TreeModelEvent(this, getPathFromRoot(),
 				new int[] { index }, new TreeNode[] { child });
-		LOGGER.info("remove node=" + this+ " fire event "+e);
-		
+		LOGGER.info("remove node=" + this + " fire event " + e);
 
 		fireTreeNodesRemoved(e);
 	}
@@ -176,10 +180,8 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		LOGGER.info("destroy node=" + this);
 
 		// If parent still set, remove this node from parent.
-		synchronized (objLock) {
-			if (null != parent) {
-				parent.remove(this);
-			}
+		if (null != parent) {
+			parent.remove(this);
 		}
 		// TODO free resources of this node at this subtype.
 		// TODO call parent class's destroy.
@@ -250,44 +252,28 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		}
 	}
 
-	/**
-	 * Notify listeners that node(s) have changed structure.
-	 * 
-	 * @param e
-	 *            event
-	 */
-	private void fireTreeStructureChanged(TreeModelEvent e) {
-
-		TreeModelListener[] tmpListeners = null;
-		// Don't leak the lock.
-		synchronized (objLock) {
-			tmpListeners = listeners.toArray(new TreeModelListener[listeners
-					.size()]);
-		}
-		for (TreeModelListener listener : tmpListeners) {
-			listener.treeStructureChanged(e);
-		}
-	}
-
 	@Override
 	public void treeNodesChanged(TreeModelEvent e) {
-		fireTreeNodesChanged(e);
-
+		// TODO Currently we don't care if nodes we listen to change.
+		// fireTreeNodesChanged(e);
 	}
 
 	@Override
 	public void treeNodesInserted(TreeModelEvent e) {
-		fireTreeNodesInserted(e);
+		// TODO Currently we don't care if nodes we listen to change.
+		// fireTreeNodesInserted(e);
 
 	}
 
 	@Override
 	public void treeNodesRemoved(TreeModelEvent e) {
-		fireTreeNodesRemoved(e);
+		// TODO Currently we don't care if nodes we listen to change.
+		// fireTreeNodesRemoved(e);
 	}
 
 	@Override
 	public void treeStructureChanged(TreeModelEvent e) {
-		fireTreeStructureChanged(e);
+		// TODO Currently we don't care if nodes we listen to change.
+		// fireTreeStructureChanged(e);
 	}
 }
