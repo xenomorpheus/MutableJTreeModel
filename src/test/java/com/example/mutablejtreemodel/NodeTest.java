@@ -9,7 +9,9 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -80,23 +82,70 @@ public class NodeTest {
 		assertEquals("path", expected, got);
 	}
 
+	/** test setName on root node informs listener */
+	@Test
+	public void testSetNameRootNodeFiresAction() {
+		TestTreeModelListener listener = new TestTreeModelListener();
+		Node root = new Node("Parent");
+		root.addListener(listener);
+		root.setName("newName");
+
+		assertEquals("Changed count", listener.getNodesChanged().size(), 1);
+		assertEquals("Insert count", listener.getNodesInserted().size(), 0);
+		assertEquals("Removed count", listener.getNodesRemoved().size(), 0);
+		assertEquals("StructureChanged count", listener.getStructureChanged()
+				.size(), 0);
+		// Check inserted event
+		TreeModelEvent e = listener.getNodesChanged().get(0);
+		System.out.println("E=" + e);
+		assertTrue("e source", root.equals(e.getSource()));
+		assertNull("e path", e.getPath());
+		assertEquals("e children length", e.getChildren().length, 1);
+		assertTrue("e children 1", e.getChildren()[0].equals(root));
+	}
+
+	/** test setName on child node informs listener */
+	@Test
+	public void testSetNameChildNodeFiresAction() {
+		TestTreeModelListener listener = new TestTreeModelListener();
+		Node root = new Node("Root");
+		Node child = new Node("Child");
+		child.setParent(root);
+		child.addListener(listener);
+		child.setName("newName");
+
+		assertEquals("Changed count", listener.getNodesChanged().size(), 1);
+		assertEquals("Insert count", listener.getNodesInserted().size(), 0);
+		assertEquals("Removed count", listener.getNodesRemoved().size(), 0);
+		assertEquals("StructureChanged count", listener.getStructureChanged()
+				.size(), 0);
+		// Check inserted event
+		TreeModelEvent e = listener.getNodesChanged().get(0);
+		System.out.println("E=" + e);
+		assertTrue("e source", child.equals(e.getSource()));
+		assertNotNull("e path", e.getPath()); // TODO more
+		assertEquals("e childIndex length", e.getChildIndices().length, 1); // TODO
+																			// more
+		assertEquals("e children length", e.getChildren().length, 1);
+		assertTrue("e children 0", e.getChildren()[0].equals(child));
+	}
+
 	/** test add informs the listener */
 	@Test
-	public void testAddFiresAction() {
+	public void testInsertFiresAction() {
 		TestTreeModelListener listener = new TestTreeModelListener();
 		Node parent = new Node("Parent");
 		parent.addListener(listener);
 		Node child = new Node("Child");
-		parent.add(child);
-		assertEquals("Changed count", listener.getNodesChanged().size(),
-				0);
-		assertEquals("Insert count", listener.getNodesInserted().size(),
-				1);
-		assertEquals("Removed count", listener.getNodesRemoved().size(),
-				0);
-		assertEquals("StructureChanged count", listener.getStructureChanged().size(),
-				0);
+		parent.insert(child, 0);
+		assertEquals("Changed count", listener.getNodesChanged().size(), 0);
+		assertEquals("Insert count", listener.getNodesInserted().size(), 1);
+		assertEquals("Removed count", listener.getNodesRemoved().size(), 0);
+		assertEquals("StructureChanged count", listener.getStructureChanged()
+				.size(), 0);
 		// TODO check inserted event
+		TreeModelEvent e = listener.getNodesInserted().get(0);
+		System.out.println("E=" + e);
 	}
 
 	/** test remove informs the listener */
@@ -111,14 +160,11 @@ public class NodeTest {
 		// perform action
 		parent.remove(child);
 		// test result
-		assertEquals("Changed count", listener.getNodesChanged().size(),
-				0);
-		assertEquals("Insert count", listener.getNodesInserted().size(),
-				0);
-		assertEquals("Removed count", listener.getNodesRemoved().size(),
-				1);
-		assertEquals("StructureChanged count", listener.getStructureChanged().size(),
-				0);
+		assertEquals("Changed count", listener.getNodesChanged().size(), 0);
+		assertEquals("Insert count", listener.getNodesInserted().size(), 0);
+		assertEquals("Removed count", listener.getNodesRemoved().size(), 1);
+		assertEquals("StructureChanged count", listener.getStructureChanged()
+				.size(), 0);
 		// TODO check removed event
 	}
 
@@ -179,6 +225,11 @@ public class NodeTest {
 		@Override
 		public void treeStructureChanged(TreeModelEvent e) {
 			structureChanged.add(e);
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getSimpleName();
 		}
 	};
 

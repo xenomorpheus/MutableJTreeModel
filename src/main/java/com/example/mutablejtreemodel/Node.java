@@ -13,10 +13,12 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 /**
- * A node in a tree structure. <p>
+ * A node in a tree structure.
+ * <p>
  * 
  * Nodes will fire change events to listeners when the tree structure changes.<br>
- * Nodes will also listen for tree change events in their neighbours.<p>
+ * Nodes will also listen for tree change events in their neighbours.
+ * <p>
  * 
  * 
  * @author xenomorpheus
@@ -73,10 +75,28 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	 */
 	public void setName(String name) {
 		this.name = name;
-		// TODO fireTreeNodesChanged();
+		fireNodeChanged();
+	}
+
+	private void fireNodeChanged() {
+		TreePath path = null;
+		Node parent = (Node) getParent();
+		int[] childIndices = new int[] {};
+		if (parent != null) {
+			path = parent.getPathFromRoot();
+			int index = parent.getIndex(this);
+			childIndices = new int[] { index };
+		}
+		TreeModelEvent e = new TreeModelEvent(this, path, childIndices,
+				new TreeNode[] { this });
+		fireTreeNodesChanged(e);
+
 	}
 
 	// MutableTreeNode
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void insert(MutableTreeNode child, int index) {
 		LOGGER.info("This='" + this + "', child='" + child + "' at index="
@@ -90,12 +110,16 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		super.insert(child, index);
 
 		// Inform our listeners that we have inserted node(s).
+		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeNodesInserted(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
 		TreeModelEvent e = new TreeModelEvent(this, getPathFromRoot(),
 				new int[] { index }, new TreeNode[] { child });
 		fireTreeNodesInserted(e);
 	}
 
 	// MutableTreeNode
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void remove(MutableTreeNode child) {
 		LOGGER.info("remove node=" + this);
@@ -162,17 +186,6 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		}
 	}
 
-	// Misc. methods.
-
-	/**
-	 * 
-	 * @return String representation of object.
-	 */
-	@Override
-	public String toString() {
-		return name;
-	}
-
 	/**
 	 * Request the destruction of this node. Notify the listeners of this node
 	 * of the death.
@@ -188,12 +201,18 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		// TODO call parent class's destroy.
 	}
 
-	// http://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html#treeNodesRemoved-javax.swing.event.TreeModelEvent-
+	// Start of section where we notify others of changes.
+
+	// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html
 	/**
 	 * Notify listeners that node(s) have changed.
 	 * 
 	 * @param e
 	 *            event
+	 * @see https 
+	 *      ://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel
+	 *      .html#fireTreeNodesChanged(java.lang.Object,%20java.lang.Object[],%
+	 *      20int[],%20java.lang.Object[])
 	 */
 
 	private void fireTreeNodesChanged(TreeModelEvent e) {
@@ -253,6 +272,13 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		}
 	}
 
+	// Start of section where we are notified of changes.
+	// http://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html
+
+	// TreeModelListener
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void treeNodesChanged(TreeModelEvent e) {
 		LOGGER.info("treeNodesChanged node=" + this + ", event=" + e);
@@ -260,6 +286,10 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		// fireTreeNodesChanged(e);
 	}
 
+	// TreeModelListener
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void treeNodesInserted(TreeModelEvent e) {
 		LOGGER.info("treeNodesInserted node=" + this + ", event=" + e);
@@ -268,6 +298,10 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 
 	}
 
+	// TreeModelListener
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void treeNodesRemoved(TreeModelEvent e) {
 		LOGGER.info("treeNodesRemoved node=" + this + ", event=" + e);
@@ -275,10 +309,56 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		// fireTreeNodesRemoved(e);
 	}
 
+	// TreeModelListener
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void treeStructureChanged(TreeModelEvent e) {
 		LOGGER.info("treeStructureChanged node=" + this + ", event=" + e);
 		// TODO Currently we don't care if nodes we listen to change.
 		// fireTreeStructureChanged(e);
 	}
+
+	// Misc. methods.
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "[" + getClass().getSimpleName() + " " + name + "]";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Node other = (Node) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
 }
