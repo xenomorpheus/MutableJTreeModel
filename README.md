@@ -5,9 +5,10 @@ PROJECT AIM(S):
 
 1. To provide a working example of a Mutable JTree Model so that others can make use of it.
 
-BUG(S):
+ACCEPTANCE CRITERIA:
 
-Probably but none reported yet.
+1. When child Node objects are inserted/removed into a parent Node, the JTree should be updated via tree change events and no other update trigger should be required.
+2. When the name of a Node object is changed, the JTree should be updated via tree change events and no other update trigger should be required.
 
 RULE(S):
 
@@ -17,3 +18,6 @@ RULE(S):
 4. The JTree only listens to the JTreeModel.
 5. The JTreeModel listens for changes in the Model, then notifies the JTree.
 
+BUG(S):
+
+Probably, but none reported yet.

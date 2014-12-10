@@ -47,7 +47,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	 * removing listeners when the actual instance isn't in use any more and
 	 * thats a source of memory leak.
 	 */
-	private List<TreeModelListener> listeners;
+	private List<TreeModelListener> listeners = new ArrayList<>();
 
 	/**
 	 * Constructor.
@@ -57,8 +57,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	 */
 	public Node(String name) {
 		super();
-		this.name = name;
-		listeners = new ArrayList<>();
+		setName(name);
 	}
 
 	/** Constructor. */
@@ -78,6 +77,9 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		fireNodeChanged();
 	}
 
+	/**
+	 * Send Events to listeners to inform them of changes to this node.
+	 */
 	private void fireNodeChanged() {
 		TreePath path = null;
 		Node parent = (Node) getParent();
@@ -90,7 +92,6 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		TreeModelEvent e = new TreeModelEvent(this, path, childIndices,
 				new TreeNode[] { this });
 		fireTreeNodesChanged(e);
-
 	}
 
 	// MutableTreeNode
@@ -327,7 +328,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	 */
 	@Override
 	public String toString() {
-		return "[" + getClass().getSimpleName() + " " + name + "]";
+		return name;
 	}
 
 	/**
