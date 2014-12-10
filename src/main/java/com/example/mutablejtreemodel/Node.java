@@ -13,10 +13,11 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 /**
- * A node in a tree structure.
+ * A node in a tree structure. <p>
  * 
- * Nodes will fire change events to listeners e.g. other nodes or JTreeModel
- * objects.
+ * Nodes will fire change events to listeners when the tree structure changes.<br>
+ * Nodes will also listen for tree change events in their neighbours.<p>
+ * 
  * 
  * @author xenomorpheus
  * @version $Revision: 1.0 $
@@ -82,8 +83,8 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 				+ index);
 
 		// If child has existing parent then remove it.
-		Node oldParent = (Node)child.getParent();
-		if (oldParent != null){
+		Node oldParent = (Node) child.getParent();
+		if (oldParent != null) {
 			oldParent.remove(child);
 		}
 		super.insert(child, index);
@@ -254,12 +255,14 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 
 	@Override
 	public void treeNodesChanged(TreeModelEvent e) {
+		LOGGER.info("treeNodesChanged node=" + this + ", event=" + e);
 		// TODO Currently we don't care if nodes we listen to change.
 		// fireTreeNodesChanged(e);
 	}
 
 	@Override
 	public void treeNodesInserted(TreeModelEvent e) {
+		LOGGER.info("treeNodesInserted node=" + this + ", event=" + e);
 		// TODO Currently we don't care if nodes we listen to change.
 		// fireTreeNodesInserted(e);
 
@@ -267,12 +270,14 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 
 	@Override
 	public void treeNodesRemoved(TreeModelEvent e) {
+		LOGGER.info("treeNodesRemoved node=" + this + ", event=" + e);
 		// TODO Currently we don't care if nodes we listen to change.
 		// fireTreeNodesRemoved(e);
 	}
 
 	@Override
 	public void treeStructureChanged(TreeModelEvent e) {
+		LOGGER.info("treeStructureChanged node=" + this + ", event=" + e);
 		// TODO Currently we don't care if nodes we listen to change.
 		// fireTreeStructureChanged(e);
 	}

@@ -1,6 +1,9 @@
 /** This document is AS-IS. No claims are made for suitability for any purpose. */
 package com.example.mutablejtreemodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
@@ -80,20 +83,27 @@ public class NodeTest {
 	/** test add informs the listener */
 	@Test
 	public void testAddFiresAction() {
-		MyTreeModelListener listener = new MyTreeModelListener();
+		TestTreeModelListener listener = new TestTreeModelListener();
 		Node parent = new Node("Parent");
 		parent.addListener(listener);
 		Node child = new Node("Child");
 		parent.add(child);
-		assertEquals("parent Insert count", listener.getInsertCount() , 1);
-		assertEquals("parent Removed count", listener.getRemovedCount(), 0);
+		assertEquals("Changed count", listener.getNodesChanged().size(),
+				0);
+		assertEquals("Insert count", listener.getNodesInserted().size(),
+				1);
+		assertEquals("Removed count", listener.getNodesRemoved().size(),
+				0);
+		assertEquals("StructureChanged count", listener.getStructureChanged().size(),
+				0);
+		// TODO check inserted event
 	}
 
-	/** test add informs the listener */
+	/** test remove informs the listener */
 	@Test
 	public void testRemoveFiresAction() {
 
-		MyTreeModelListener listener = new MyTreeModelListener();
+		TestTreeModelListener listener = new TestTreeModelListener();
 		Node parent = new Node("Parent");
 		Node child = new Node("Child");
 		parent.add(child);
@@ -101,67 +111,74 @@ public class NodeTest {
 		// perform action
 		parent.remove(child);
 		// test result
-		assertEquals("parent Insert count", listener.getInsertCount() , 0);
-		assertEquals("parent Removed count", listener.getRemovedCount(), 1);
+		assertEquals("Changed count", listener.getNodesChanged().size(),
+				0);
+		assertEquals("Insert count", listener.getNodesInserted().size(),
+				0);
+		assertEquals("Removed count", listener.getNodesRemoved().size(),
+				1);
+		assertEquals("StructureChanged count", listener.getStructureChanged().size(),
+				0);
+		// TODO check removed event
 	}
 
-	class MyTreeModelListener implements TreeModelListener {
+	class TestTreeModelListener implements TreeModelListener {
 
-		private int changedCount = 0;
-		private int insertCount = 0;
-		private int removedCount = 0;
-		private int structureChangedCount = 0;
+		private List<TreeModelEvent> nodesChanged = new ArrayList<>();
+		private List<TreeModelEvent> nodesInserted = new ArrayList<>();
+		private List<TreeModelEvent> nodesRemoved = new ArrayList<>();
+		private List<TreeModelEvent> structureChanged = new ArrayList<>();
 
-		public int getChangedCount() {
-			return changedCount;
+		public List<TreeModelEvent> getNodesChanged() {
+			return nodesChanged;
 		}
 
-		public void setChangedCount(int changedCount) {
-			this.changedCount = changedCount;
+		public void setChanged(List<TreeModelEvent> list) {
+			nodesChanged = list;
 		}
 
-		public int getInsertCount() {
-			return insertCount;
+		public List<TreeModelEvent> getNodesInserted() {
+			return nodesInserted;
 		}
 
-		public void setInsertCount(int insertCount) {
-			this.insertCount = insertCount;
+		public void setNodeInserted(List<TreeModelEvent> list) {
+			nodesInserted = list;
 		}
 
-		public int getRemovedCount() {
-			return removedCount;
+		public List<TreeModelEvent> getNodesRemoved() {
+			return nodesRemoved;
 		}
 
-		public void setRemovedCount(int removedCount) {
-			this.removedCount = removedCount;
+		public void setNodesRemoved(List<TreeModelEvent> list) {
+			nodesRemoved = list;
 		}
 
-		public int getStructureChangedCount() {
-			return structureChangedCount;
+		public List<TreeModelEvent> getStructureChanged() {
+			return structureChanged;
 		}
 
-		public void setStructureChangedCount(int structureChangedCount) {
-			this.structureChangedCount = structureChangedCount;
+		public void setStructureChanged(List<TreeModelEvent> list) {
+			structureChanged = list;
 		}
 
 		@Override
 		public void treeNodesChanged(TreeModelEvent e) {
-			changedCount++;
+			nodesChanged.add(e);
 		}
 
 		@Override
 		public void treeNodesInserted(TreeModelEvent e) {
-			insertCount++;
+			nodesInserted.add(e);
 		}
 
 		@Override
 		public void treeNodesRemoved(TreeModelEvent e) {
-			removedCount++;
+			nodesRemoved.add(e);
 		}
 
 		@Override
 		public void treeStructureChanged(TreeModelEvent e) {
-			structureChangedCount++;
+			structureChanged.add(e);
 		}
 	};
 
