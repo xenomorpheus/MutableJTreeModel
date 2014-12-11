@@ -93,7 +93,7 @@ public class NodeTest {
 				.size(), 0);
 		// Check inserted event
 		TreeModelEvent e = listener.getNodesChanged().get(0);
-		System.out.println("E=" + e);
+
 		assertTrue("e source", root.equals(e.getSource()));
 		assertNull("e path", e.getPath());
 		assertEquals("e children length", e.getChildren().length, 1);
@@ -117,7 +117,7 @@ public class NodeTest {
 				.size(), 0);
 		// Check inserted event
 		TreeModelEvent e = listener.getNodesChanged().get(0);
-		System.out.println("E=" + e);
+
 		assertTrue("e source", child.equals(e.getSource()));
 		assertNotNull("e path", e.getPath()); // TODO more
 		assertEquals("e childIndex length", e.getChildIndices().length, 1); // TODO
@@ -141,7 +141,7 @@ public class NodeTest {
 				.size(), 0);
 		// TODO check inserted event
 		TreeModelEvent e = listener.getNodesInserted().get(0);
-		System.out.println("E=" + e);
+
 	}
 
 	/** test remove informs the listener */
