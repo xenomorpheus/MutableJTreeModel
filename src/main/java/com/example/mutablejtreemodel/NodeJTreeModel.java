@@ -318,21 +318,25 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 
 	@Override
 	public void treeNodesChanged(TreeModelEvent e) {
+		LOGGER.debug("TreeModelEvent=" + e);
 		fireTreeNodesChanged(e);
 	}
 
 	@Override
 	public void treeNodesInserted(TreeModelEvent e) {
+		LOGGER.debug("TreeModelEvent=" + e);
 		fireTreeNodesInserted(e);
 	}
 
 	@Override
 	public void treeNodesRemoved(TreeModelEvent e) {
+		LOGGER.debug("TreeModelEvent=" + e);
 		fireTreeNodesRemoved(e);
 	}
 
 	@Override
 	public void treeStructureChanged(TreeModelEvent e) {
+		LOGGER.debug("TreeModelEvent=" + e);
 		fireTreeStructureChanged(e);
 	}
 
