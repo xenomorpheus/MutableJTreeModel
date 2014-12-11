@@ -325,12 +325,28 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	@Override
 	public void treeNodesInserted(TreeModelEvent e) {
 		LOGGER.debug("TreeModelEvent=" + e);
+		// TODO thread safe?
+		Object children[] = e.getChildren();
+		for (Object child : children) {
+			if (child instanceof Node) {
+				Node node = (Node) child;
+				node.addListener(this);
+			}
+		}
 		fireTreeNodesInserted(e);
 	}
 
 	@Override
 	public void treeNodesRemoved(TreeModelEvent e) {
 		LOGGER.debug("TreeModelEvent=" + e);
+		// TODO thread safe?
+		Object children[] = e.getChildren();
+		for (Object child : children) {
+			if (child instanceof Node) {
+				Node node = (Node) child;
+				node.removeListener(this);
+			}
+		}
 		fireTreeNodesRemoved(e);
 	}
 
