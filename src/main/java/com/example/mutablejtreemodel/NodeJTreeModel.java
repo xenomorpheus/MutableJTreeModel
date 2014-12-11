@@ -68,7 +68,8 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	 * Set the root node.
 	 * 
 	 * @param root
-	 *            set the root node that this TreeModel is listening to.
+	 *            set the root node. This TreeModel will start listening to root
+	 *            for Tree events.
 	 */
 	public void setRoot(Node root) {
 		this.root = root;
@@ -214,8 +215,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	 */
 	@Override
 	public void valueForPathChanged(TreePath path, Object newValue) {
-		LOGGER.debug("path=" + path + ", newValue="
-				+ newValue);
+		LOGGER.debug("path=" + path + ", newValue=" + newValue);
 		Node node = (Node) path.getLastPathComponent();
 		node.setName((String) newValue);
 	}
