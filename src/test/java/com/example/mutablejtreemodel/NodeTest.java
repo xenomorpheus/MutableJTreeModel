@@ -1,13 +1,13 @@
 /** This document is AS-IS. No claims are made for suitability for any purpose. */
 package com.example.mutablejtreemodel;
 
-import javax.swing.event.TreeModelEvent;
-import javax.swing.tree.TreePath;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import javax.swing.event.TreeModelEvent;
+import javax.swing.tree.TreePath;
 
 import org.junit.Test;
 

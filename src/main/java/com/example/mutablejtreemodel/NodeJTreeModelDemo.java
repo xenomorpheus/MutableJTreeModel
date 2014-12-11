@@ -3,12 +3,13 @@ package com.example.mutablejtreemodel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+
+import org.apache.log4j.Logger;
 
 /**
  * This version automatically add nodes. This is a simplified version that
