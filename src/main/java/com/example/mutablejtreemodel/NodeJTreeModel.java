@@ -3,13 +3,14 @@ package com.example.mutablejtreemodel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import javax.swing.tree.DefaultMutableTreeNode;
+
+import org.apache.log4j.Logger;
 
 /**
  * Objects of this class form an adapter between a JTree and the model, that
@@ -85,7 +86,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	 */
 	@Override
 	public void addTreeModelListener(TreeModelListener listener) {
-		LOGGER.info("Adding Listener: " + listener);
+		LOGGER.debug("listener: " + listener);
 		synchronized (objLock) {
 			listeners.add(listener);
 		}
@@ -100,7 +101,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	 */
 	@Override
 	public void removeTreeModelListener(TreeModelListener listener) {
-		LOGGER.info("Remove Listener: " + listener);
+		LOGGER.debug("listener: " + listener);
 		synchronized (objLock) {
 			listeners.remove(listener);
 		}
@@ -142,7 +143,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 					+ node.getClass().getCanonicalName());
 		}
 		int count = ((Node) node).getChildCount();
-		LOGGER.info("node='" + node + "', count=" + count);
+		LOGGER.debug("node='" + node + "', count=" + count);
 		return count;
 	}
 
@@ -167,7 +168,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 							+ parent.getClass().getCanonicalName());
 		}
 		Object child = ((DefaultMutableTreeNode) parent).getChildAt(index);
-		LOGGER.info("getChild - parent=" + parent + ", index=" + index
+		LOGGER.debug("parent=" + parent + ", index=" + index
 				+ ", RETURN child=" + child);
 		return child;
 	}
@@ -197,7 +198,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 							+ child.getClass().getCanonicalName());
 		}
 		int index = ((Node) parent).getIndex((Node) child);
-		LOGGER.info("getIndexOfChild - parent=" + parent + ", child=" + child
+		LOGGER.debug("parent=" + parent + ", child=" + child
 				+ ", RETURN index=" + index);
 		return index;
 	}
@@ -213,7 +214,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	 */
 	@Override
 	public void valueForPathChanged(TreePath path, Object newValue) {
-		LOGGER.info("valueForPathChanged path=" + path + ", newValue="
+		LOGGER.debug("path=" + path + ", newValue="
 				+ newValue);
 		Node node = (Node) path.getLastPathComponent();
 		node.setName((String) newValue);
@@ -236,6 +237,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	 */
 
 	private void fireTreeNodesChanged(TreeModelEvent e) {
+		LOGGER.debug("TreeModelEvent=" + e);
 
 		TreeModelListener[] tmpListeners = null;
 		// Don't leak the lock.
@@ -260,6 +262,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	 */
 
 	private void fireTreeNodesInserted(TreeModelEvent e) {
+		LOGGER.debug("TreeModelEvent=" + e);
 
 		TreeModelListener[] tmpListeners = null;
 		// Don't leak the lock.
@@ -280,6 +283,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	 */
 
 	private void fireTreeNodesRemoved(TreeModelEvent e) {
+		LOGGER.debug("TreeModelEvent=" + e);
 
 		TreeModelListener[] tmpListeners = null;
 		// Don't leak the lock.
@@ -299,6 +303,7 @@ public class NodeJTreeModel implements TreeModel, TreeModelListener {
 	 *            event
 	 */
 	private void fireTreeStructureChanged(TreeModelEvent e) {
+		LOGGER.debug("TreeModelEvent=" + e);
 
 		TreeModelListener[] tmpListeners = null;
 		// Don't leak the lock.
