@@ -140,8 +140,7 @@ public class NodeTest {
 		assertEquals("StructureChanged count", listener.getStructureChanged()
 				.size(), 0);
 		// TODO check inserted event
-		TreeModelEvent e = listener.getNodesInserted().get(0);
-
+		// TreeModelEvent e = listener.getNodesInserted().get(0);
 	}
 
 	/** test remove informs the listener */
@@ -162,6 +161,7 @@ public class NodeTest {
 		assertEquals("StructureChanged count", listener.getStructureChanged()
 				.size(), 0);
 		// TODO check removed event
+		// TreeModelEvent e = listener.getNodesInserted().get(0);
 	};
 
 }

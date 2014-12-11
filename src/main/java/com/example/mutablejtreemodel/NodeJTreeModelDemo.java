@@ -81,11 +81,12 @@ public class NodeJTreeModelDemo {
 			}
 		});
 
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 1; j++) {
-				child = new Node("CHILD_NODE_" + i + "_" + j);
+		for (int i = 0; i < 15; i++) {
+			ROOT.add(new Node("CHILD_NODE_" + i));
+			for (int j = 0; j < 2; j++) {
 				LOGGER.info("********************************************");
 				Thread.sleep(1000);
+				child = new Node("CHILD_NODE_" + i + "_" + j);
 				parent.add(child);
 			}
 			parent = child;

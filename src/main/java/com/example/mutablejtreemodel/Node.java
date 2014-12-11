@@ -104,11 +104,8 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		LOGGER.debug("this='" + this + "', child='" + child + "' at index="
 				+ index);
 
-		// If child has existing parent then remove it.
-		Node oldParent = (Node) child.getParent();
-		if (oldParent != null) {
-			oldParent.remove(child);
-		}
+		// If child has existing parent then super will remove it.
+		// TODO Fire event on old parent for losing a node.
 		super.insert(child, index);
 
 		// Inform our listeners that we have inserted node(s).

@@ -85,9 +85,14 @@ public class NodeJTreeModelTest {
 		assertEquals("Removed count", listener.getNodesRemoved().size(), 0);
 		assertEquals("StructureChanged count", listener.getStructureChanged()
 				.size(), 0);
-		// TODO check inserted event
+		// Check inserted event
 		TreeModelEvent e = listener.getNodesInserted().get(0);
-		System.out.println("E=" + e);
+		// assertTrue("e source", treeModel.equals(e.getSource()));
+		assertNotNull("e path", e.getPath()); // TODO more
+		assertEquals("e childIndex length", e.getChildIndices().length, 1); // TODO
+																			// more
+		assertEquals("e children length", e.getChildren().length, 1);
+		assertTrue("e children 0", e.getChildren()[0].equals(child));
 		fail("Not yet completed");
 	}
 
