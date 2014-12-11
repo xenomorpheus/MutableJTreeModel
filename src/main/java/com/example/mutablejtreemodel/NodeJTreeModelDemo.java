@@ -24,7 +24,12 @@ public class NodeJTreeModelDemo {
 	private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
 
 	/** the root node of the tree. */
-	private static final Node ROOT = new Node("Root Node");
+	private static final Node ROOT = new Node("Root Node - Expand Me");
+
+	/** Constructor */
+	NodeJTreeModelDemo() {
+		super();
+	}
 
 	/**
 	 * Method startSwing.
@@ -37,7 +42,6 @@ public class NodeJTreeModelDemo {
 		/** The link between our nodes and the UI JTree */
 		NodeJTreeModel treeModel = new NodeJTreeModel();
 		treeModel.setRoot(root);
-		// TODO consider root.addListener(treeModel);
 
 		// Create a JTree and tell it to display our model
 		JTree jTree = new JTree();
@@ -53,10 +57,10 @@ public class NodeJTreeModelDemo {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(scrollpane, BorderLayout.CENTER);
 		frame.setPreferredSize(new Dimension(400, 600));
-		frame.setLocationRelativeTo(null); // This will center your app
 		// Always pack the frame after adding components.
 		// (Recommended after every change that the components may have)
 		frame.pack();
+		frame.setLocationRelativeTo(null); // This will center your app
 		frame.setVisible(true);
 	}
 
@@ -72,7 +76,7 @@ public class NodeJTreeModelDemo {
 		Node parent = ROOT;
 		Node child = null;
 
-		// Trying to put the UI on a different thread to the one that changes
+		// The UI is on a different thread to the one that changes
 		// the Model.
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -80,9 +84,10 @@ public class NodeJTreeModelDemo {
 				demo.startSwing(ROOT);
 			}
 		});
-
-		for (int i = 0; i < 15; i++) {
-			ROOT.add(new Node("CHILD_NODE_" + i));
+		// TODO auto expand the root node. How?
+		// TODO change selection to each new child node. How?
+		for (int i = 0; i < 10; i++) {
+			// TODO - fix - ROOT.setName("Root Node Name "+i);
 			for (int j = 0; j < 2; j++) {
 				LOGGER.info("********************************************");
 				Thread.sleep(1000);
@@ -90,6 +95,7 @@ public class NodeJTreeModelDemo {
 				parent.add(child);
 			}
 			parent = child;
+			ROOT.add(new Node("CHILD_NODE_" + i));
 		}
 	}
 }
