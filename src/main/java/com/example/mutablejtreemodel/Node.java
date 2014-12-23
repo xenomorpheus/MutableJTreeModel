@@ -135,7 +135,6 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		TreeModelEvent e = new TreeModelEvent(this, getPathFromRoot(),
 				new int[] { index }, new TreeNode[] { child });
 		LOGGER.debug("this=" + this + " fire event " + e);
-
 		fireTreeNodesRemoved(e);
 	}
 
@@ -281,7 +280,6 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	public void treeNodesChanged(TreeModelEvent e) {
 		LOGGER.debug("this=" + this + ", event=" + e);
 		// TODO Currently we don't care if nodes we listen to change.
-		// fireTreeNodesChanged(e);
 	}
 
 	// TreeModelListener
@@ -292,8 +290,6 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	public void treeNodesInserted(TreeModelEvent e) {
 		LOGGER.debug("this=" + this + ", event=" + e);
 		// TODO Currently we don't care if nodes we listen to change.
-		// fireTreeNodesInserted(e);
-
 	}
 
 	// TreeModelListener
@@ -304,7 +300,6 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	public void treeNodesRemoved(TreeModelEvent e) {
 		LOGGER.debug("this=" + this + ", event=" + e);
 		// TODO Currently we don't care if nodes we listen to change.
-		// fireTreeNodesRemoved(e);
 	}
 
 	// TreeModelListener
@@ -315,13 +310,14 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	public void treeStructureChanged(TreeModelEvent e) {
 		LOGGER.debug("this=" + this + ", event=" + e);
 		// TODO Currently we don't care if nodes we listen to change.
-		// fireTreeStructureChanged(e);
 	}
 
 	// Misc. methods.
 
 	/**
 	 * {@inheritDoc}
+	 * Note this string is used as a label in JTree.
+	 * 
 	 */
 	@Override
 	public String toString() {

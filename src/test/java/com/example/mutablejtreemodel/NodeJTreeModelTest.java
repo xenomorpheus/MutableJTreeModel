@@ -88,9 +88,10 @@ public class NodeJTreeModelTest {
 		// Check inserted event
 		TreeModelEvent e = listener.getNodesInserted().get(0);
 		// assertTrue("e source", treeModel.equals(e.getSource()));
-		assertNotNull("e path", e.getPath()); // TODO more
-		assertEquals("e childIndex length", e.getChildIndices().length, 1); // TODO
-																			// more
+		// TODO more unit tests
+		assertNotNull("e path", e.getPath());
+		// TODO more unit tests
+		assertEquals("e childIndex length", e.getChildIndices().length, 1); 
 		assertEquals("e children length", e.getChildren().length, 1);
 		assertTrue("e children 0", e.getChildren()[0].equals(child));
 		fail("Not yet completed");
