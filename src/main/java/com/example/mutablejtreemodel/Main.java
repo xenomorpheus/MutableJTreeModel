@@ -19,7 +19,7 @@ public class Main {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new NodeJTreeEditor(new Node("RootNode"));
+				new NodeJTreeEditor(new Node("Root Node"));
 			}
 		});
 	}

@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.log4j.Logger;
 
@@ -24,7 +26,13 @@ public class NodeJTreeModelDemo {
 	private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
 
 	/** the root node of the tree. */
-	private static final Node ROOT = new Node("Root Node - Expand Me");
+	private static final Node ROOT = new Node("Root Node");
+
+	/**
+	 * JTree UI to show tree. We only create this so we programmatically show
+	 * how to select a node. No other operations are done on the raw JTree.
+	 */
+	private static JTree JTREE = new JTree();
 
 	/** Constructor */
 	NodeJTreeModelDemo() {
@@ -43,14 +51,12 @@ public class NodeJTreeModelDemo {
 		NodeJTreeModel treeModel = new NodeJTreeModel();
 		treeModel.setRoot(root);
 
-		// Create a JTree and tell it to display our model
-		JTree jTree = new JTree();
-		jTree.setModel(treeModel);
-		jTree.setEditable(true);
-		jTree.setSelectionRow(0);
+		// Tell JTree to display our model
+		JTREE.setModel(treeModel);
+		JTREE.setEditable(true);
 
 		// The JTree can get big, so allow it to scroll.
-		JScrollPane scrollpane = new JScrollPane(jTree);
+		JScrollPane scrollpane = new JScrollPane(JTREE);
 
 		// Setup frame.
 		JFrame frame = new JFrame("MyNode Creator");
@@ -84,8 +90,7 @@ public class NodeJTreeModelDemo {
 				demo.startSwing(ROOT);
 			}
 		});
-		// TODO auto expand the root node. How?
-		// TODO change selection to each new child node. How?
+		// Keep creating child nodes within the last created child node.
 		for (int i = 0; i < 10; i++) {
 			// TODO - fix - ROOT.setName("Root Node Name "+i);
 			for (int j = 0; j < 2; j++) {
@@ -93,9 +98,18 @@ public class NodeJTreeModelDemo {
 				Thread.sleep(1000);
 				child = new Node("CHILD_NODE_" + i + "_" + j);
 				parent.add(child);
+
+				// Select the newly created node.
+				TreeSelectionModel treeSelectionModel = JTREE
+						.getSelectionModel();
+				TreePath path = child.getPathFromRoot();
+				treeSelectionModel.setSelectionPath(path);
+
 			}
 			parent = child;
+			// Also add children to root. Just for fun.
 			ROOT.add(new Node("CHILD_NODE_" + i));
+
 		}
 	}
 }
