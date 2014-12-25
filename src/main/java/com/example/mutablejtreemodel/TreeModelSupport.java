@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 public class TreeModelSupport {
 
 	/** class logger */
-	private static final Logger LOGGER = Logger.getLogger(NodeJTreeModel.class
+	private static final Logger LOGGER = Logger.getLogger(TreeModelSupport.class
 			.getName());
 
 	/**
@@ -100,12 +100,8 @@ public class TreeModelSupport {
 	/**
 	 * Notify listeners that node(s) have been inserted.
 	 * 
-	 * @param parent
-	 *            the parent node.
-	 * @param childIndexes
-	 *            indexes of children be inserted, ascending order.
-	 * @param children
-	 *            array of the inserted children.
+	 * @param e
+	 *            event
 	 */
 
 	public void fireTreeNodesInserted(TreeModelEvent e) {
