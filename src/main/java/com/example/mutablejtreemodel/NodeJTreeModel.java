@@ -7,7 +7,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Objects of this class form an adapter between a JTree and the model, that
@@ -22,7 +23,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 		TreeModelListener {
 
 	/** class logger */
-	private static final Logger LOGGER = Logger.getLogger(NodeJTreeModel.class
+	private static final Logger logger = LogManager.getLogger(NodeJTreeModel.class
 			.getName());
 
 	/** We specify the root directory when we create the model. */
@@ -97,7 +98,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 					+ node.getClass().getCanonicalName());
 		}
 		int count = ((Node) node).getChildCount();
-		LOGGER.debug("node='" + node + "', count=" + count);
+		logger.debug("node='" + node + "', count=" + count);
 		return count;
 	}
 
@@ -122,7 +123,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 							+ parent.getClass().getCanonicalName());
 		}
 		Object child = ((DefaultMutableTreeNode) parent).getChildAt(index);
-		LOGGER.debug("parent=" + parent + ", index=" + index
+		logger.debug("parent=" + parent + ", index=" + index
 				+ ", RETURN child=" + child);
 		return child;
 	}
@@ -152,7 +153,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 							+ child.getClass().getCanonicalName());
 		}
 		int index = ((Node) parent).getIndex((Node) child);
-		LOGGER.debug("parent=" + parent + ", child=" + child
+		logger.debug("parent=" + parent + ", child=" + child
 				+ ", RETURN index=" + index);
 		return index;
 	}
@@ -168,7 +169,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 	 */
 	@Override
 	public void valueForPathChanged(TreePath path, Object newValue) {
-		LOGGER.debug("path=" + path + ", newValue=" + newValue);
+		logger.debug("path=" + path + ", newValue=" + newValue);
 		Node node = (Node) path.getLastPathComponent();
 		node.setName((String) newValue);
 	}
@@ -183,13 +184,13 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 
 	@Override
 	public void treeNodesChanged(TreeModelEvent e) {
-		LOGGER.debug("TreeModelEvent=" + e);
+		logger.debug("TreeModelEvent=" + e);
 		fireTreeNodesChanged(e);
 	}
 
 	@Override
 	public void treeNodesInserted(TreeModelEvent e) {
-		LOGGER.debug("TreeModelEvent=" + e);
+		logger.debug("TreeModelEvent=" + e);
 		// TODO thread safe?
 		Object children[] = e.getChildren();
 		for (Object child : children) {
@@ -203,7 +204,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 
 	@Override
 	public void treeNodesRemoved(TreeModelEvent e) {
-		LOGGER.debug("TreeModelEvent=" + e);
+		logger.debug("TreeModelEvent=" + e);
 		// TODO thread safe?
 		Object children[] = e.getChildren();
 		for (Object child : children) {
@@ -217,7 +218,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 
 	@Override
 	public void treeStructureChanged(TreeModelEvent e) {
-		LOGGER.debug("TreeModelEvent=" + e);
+		logger.debug("TreeModelEvent=" + e);
 		fireTreeStructureChanged(e);
 	}
 

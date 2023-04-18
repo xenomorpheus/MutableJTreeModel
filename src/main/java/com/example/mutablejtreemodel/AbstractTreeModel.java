@@ -2,12 +2,12 @@ package com.example.mutablejtreemodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
-
-import org.apache.log4j.Logger;
 
 /**
  * JTree nodes may be listened to for changes. This class provides support for
@@ -19,8 +19,7 @@ import org.apache.log4j.Logger;
 public abstract class AbstractTreeModel implements TreeModel {
 
 	/** class logger */
-	private static final Logger LOGGER = Logger
-			.getLogger(AbstractTreeModel.class.getName());
+	private static final Logger logger = LogManager.getLogger(AbstractTreeModel.class);
 
 	/**
 	 * Those that listen for changes to the model.<br>
@@ -46,14 +45,14 @@ public abstract class AbstractTreeModel implements TreeModel {
 
 	/**
 	 * Add TreeModelListener.
-	 * 
+	 *
 	 * @param listener
 	 *            TreeModelListener
 	 * @see javax.swing.tree.TreeModel#addTreeModelListener(TreeModelListener)
 	 */
 	@Override
 	public void addTreeModelListener(TreeModelListener listener) {
-		LOGGER.debug("listener: " + listener);
+		logger.debug("listener: " + listener);
 		synchronized (objLock) {
 			if (listener != null && !listeners.contains(listener)) {
 				listeners.add(listener);
@@ -63,14 +62,14 @@ public abstract class AbstractTreeModel implements TreeModel {
 
 	/**
 	 * Remove TreeModelListener.
-	 * 
+	 *
 	 * @param listener
 	 *            TreeModelListener
 	 * @see javax.swing.tree.TreeModel#removeTreeModelListener(TreeModelListener)
 	 */
 	@Override
 	public void removeTreeModelListener(TreeModelListener listener) {
-		LOGGER.debug("listener: " + listener);
+		logger.debug("listener: " + listener);
 		synchronized (objLock) {
 			if (listener != null) {
 				listeners.remove(listener);
@@ -87,7 +86,7 @@ public abstract class AbstractTreeModel implements TreeModel {
 	 */
 
 	public void fireTreeNodesChanged(TreeModelEvent e) {
-		LOGGER.debug("TreeModelEvent=" + e);
+		logger.debug("TreeModelEvent=" + e);
 
 		TreeModelListener[] tmpListeners = null;
 		// Don't leak the lock.
@@ -108,7 +107,7 @@ public abstract class AbstractTreeModel implements TreeModel {
 	 */
 
 	public void fireTreeNodesInserted(TreeModelEvent e) {
-		LOGGER.debug("TreeModelEvent=" + e);
+		logger.debug("TreeModelEvent=" + e);
 
 		TreeModelListener[] tmpListeners = null;
 		// Don't leak the lock.
@@ -129,7 +128,7 @@ public abstract class AbstractTreeModel implements TreeModel {
 	 */
 
 	public void fireTreeNodesRemoved(TreeModelEvent e) {
-		LOGGER.debug("TreeModelEvent=" + e);
+		logger.debug("TreeModelEvent=" + e);
 
 		TreeModelListener[] tmpListeners = null;
 		// Don't leak the lock.
@@ -149,7 +148,7 @@ public abstract class AbstractTreeModel implements TreeModel {
 	 *            event
 	 */
 	public void fireTreeStructureChanged(TreeModelEvent e) {
-		LOGGER.debug("TreeModelEvent=" + e);
+		logger.debug("TreeModelEvent=" + e);
 
 		TreeModelListener[] tmpListeners = null;
 		// Don't leak the lock.

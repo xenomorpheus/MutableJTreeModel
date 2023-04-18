@@ -11,7 +11,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This version automatically add nodes. This is a simplified version that
@@ -23,7 +24,7 @@ import org.apache.log4j.Logger;
  */
 public class NodeJTreeModelDemo {
 	/** class logger */
-	private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
+	private static final Logger logger = LogManager.getLogger(Node.class);
 
 	/** the root node of the tree. */
 	private static final Node ROOT = new Node("Root Node");
@@ -94,7 +95,7 @@ public class NodeJTreeModelDemo {
 		for (int i = 0; i < 10; i++) {
 			// TODO - fix - ROOT.setName("Root Node Name "+i);
 			for (int j = 0; j < 2; j++) {
-				LOGGER.info("********************************************");
+				logger.info("********************************************");
 				Thread.sleep(1000);
 				child = new Node("CHILD_NODE_" + i + "_" + j);
 				parent.add(child);
