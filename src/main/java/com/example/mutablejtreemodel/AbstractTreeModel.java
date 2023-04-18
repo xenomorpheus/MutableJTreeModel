@@ -12,7 +12,7 @@ import javax.swing.tree.TreeModel;
 /**
  * JTree nodes may be listened to for changes. This class provides support for
  * adding and removing listeners, also for sending events to those listeners.
- * 
+ *
  * @author xenomorpheus
  * @version $Revision: 1.0 $
  **/
@@ -80,7 +80,7 @@ public abstract class AbstractTreeModel implements TreeModel {
 	// http://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html#treeNodesRemoved-javax.swing.event.TreeModelEvent-
 	/**
 	 * Notify listeners that node(s) have changed.
-	 * 
+	 *
 	 * @param e
 	 *            event
 	 */
@@ -101,7 +101,7 @@ public abstract class AbstractTreeModel implements TreeModel {
 
 	/**
 	 * Notify listeners that node(s) have been inserted.
-	 * 
+	 *
 	 * @param e
 	 *            event
 	 */
@@ -122,7 +122,7 @@ public abstract class AbstractTreeModel implements TreeModel {
 
 	/**
 	 * Notify listeners that node(s) have been removed.
-	 * 
+	 *
 	 * @param e
 	 *            event
 	 */
@@ -143,7 +143,7 @@ public abstract class AbstractTreeModel implements TreeModel {
 
 	/**
 	 * Notify listeners that node(s) have changed structure.
-	 * 
+	 *
 	 * @param e
 	 *            event
 	 */

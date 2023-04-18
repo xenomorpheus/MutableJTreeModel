@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
  * This version automatically add nodes. This is a simplified version that
  * removes the button logic, and hence button events as a possible cause of
  * bugs.
- * 
+ *
  * @author xenomorpheus
  * @version $Revision: 1.0 $
  */
@@ -42,7 +42,7 @@ public class NodeJTreeModelDemo {
 
 	/**
 	 * Method startSwing.
-	 * 
+	 *
 	 * @param root
 	 *            the root Node.
 	 */
@@ -73,10 +73,10 @@ public class NodeJTreeModelDemo {
 
 	/**
 	 * Method main.
-	 * 
+	 *
 	 * @param argv
 	 *            command line arguments. Not used.
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] argv) throws InterruptedException {

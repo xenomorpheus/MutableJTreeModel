@@ -41,7 +41,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <!-- add to the Jar's manifest to tell it the 
+                            <!-- add to the Jar's manifest to tell it the
                                 main. -->
                             <mainClass>com.example.mutablejtreemodel.Main</mainClass>
                         </manifest>
@@ -67,8 +67,4 @@
             </plugin>
         </plugins>
     </build>
-
-
-   
-
 </project>

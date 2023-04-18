@@ -13,9 +13,9 @@ import org.apache.logging.log4j.Logger;
 /**
  * Objects of this class form an adapter between a JTree and the model, that
  * being a tree of Node objects.
- * 
+ *
  * The methods in this class allow the JTree component to traverse the tree.
- * 
+ *
  * @author xenomorpheus
  * @version $Revision: 1.0 $
  **/
@@ -39,7 +39,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 
 	/**
 	 * The model knows how to return the root object of the tree.
-	 * 
+	 *
 	 * @return Object
 	 * @see javax.swing.tree.TreeModel#getRoot()
 	 */
@@ -50,7 +50,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 
 	/**
 	 * Set the root node.
-	 * 
+	 *
 	 * @param root
 	 *            set the root node. This TreeModel will start listening to root
 	 *            for Tree events.
@@ -64,8 +64,8 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 
 	/**
 	 * Tell JTree whether an object in the tree is a leaf or not.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param node
 	 *            Object
 	 * @return tree if node is a leaf. * @see
@@ -83,8 +83,8 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 
 	/**
 	 * Tell JTree how many children a node has.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param node
 	 *            Object
 	 * @return how many children. * @see
@@ -106,10 +106,10 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 	 * Fetch any numbered child of a node for the JTree. Our model returns
 	 * MyNode objects for all nodes in the tree. The JTree displays these by
 	 * calling the MyNode.toString() method.
-	 * 
+	 *
 	 * @param parent
 	 * @param index
-	 * 
+	 *
 	 * @return child at the requested index. * @see
 	 *         javax.swing.tree.TreeModel#getChild(Object, int)
 	 */
@@ -130,7 +130,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 
 	/**
 	 * Figure out a child's position in its parent node.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent node
 	 * @param child
@@ -160,7 +160,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 
 	/**
 	 * This method is only invoked by the JTree for editable trees.
-	 * 
+	 *
 	 * @param path
 	 *            TreePath
 	 * @param newValue
@@ -175,7 +175,7 @@ public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
 	}
 
 	/**
-	 * 
+	 *
 	 * @return string representation of this object.
 	 */
 	public String toString() {

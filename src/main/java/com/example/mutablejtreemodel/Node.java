@@ -17,12 +17,12 @@ import org.apache.logging.log4j.Logger;
 /**
  * A node in a tree structure.
  * <p>
- * 
+ *
  * Nodes will fire change events to listeners when the tree structure changes.<br>
  * Nodes will also listen for tree change events in their neighbours.
  * <p>
- * 
- * 
+ *
+ *
  * @author xenomorpheus
  * @version $Revision: 1.0 $
  */
@@ -53,7 +53,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param name
 	 *            the human identifiable name of this node.
 	 */
@@ -70,7 +70,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	// Getters and Setters
 	/**
 	 * Set the name.
-	 * 
+	 *
 	 * @param name
 	 *            the new name.
 	 */
@@ -159,7 +159,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	/**
 	 * Add a listener from the list that wish to listen to events involving this
 	 * node.
-	 * 
+	 *
 	 * @param listener
 	 *            listener to add.
 	 */
@@ -173,7 +173,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	/**
 	 * Add a listener to the list that wish to listen to events involving this
 	 * node.
-	 * 
+	 *
 	 * @param listener
 	 *            listener to remove.
 	 */
@@ -204,10 +204,10 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html
 	/**
 	 * Notify listeners that node(s) have changed.
-	 * 
+	 *
 	 * @param e
 	 *            event
-	 * @see https 
+	 * @see https
 	 *      ://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel
 	 *      .html#fireTreeNodesChanged(java.lang.Object,%20java.lang.Object[],%
 	 *      20int[],%20java.lang.Object[])
@@ -228,7 +228,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 
 	/**
 	 * Notify listeners that node(s) have been inserted.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent node.
 	 * @param childIndexes
@@ -252,7 +252,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 
 	/**
 	 * Notify listeners that node(s) have been removed.
-	 * 
+	 *
 	 * @param e
 	 *            event
 	 */
@@ -318,7 +318,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 	/**
 	 * {@inheritDoc}
 	 * Note this string is used as a label in JTree.
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
