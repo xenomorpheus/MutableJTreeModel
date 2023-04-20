@@ -4,7 +4,6 @@ package com.example.mutablejtreemodel;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,8 +18,7 @@ import org.apache.logging.log4j.Logger;
  * @author xenomorpheus
  * @version $Revision: 1.0 $
  **/
-public class NodeJTreeModel extends AbstractTreeModel implements TreeModel,
-		TreeModelListener {
+public class NodeJTreeModel extends AbstractTreeModel implements TreeModelListener {
 
 	/** class logger */
 	private static final Logger logger = LogManager.getLogger(NodeJTreeModel.class
