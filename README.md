@@ -21,3 +21,11 @@ RULE(S):
 BUG(S):
 
 Probably, but none reported yet.
+
+Build
+=====
+mvn package
+
+Run
+===
+java -jar target/MutableJTreeModel-0.0.1-SNAPSHOT-jar-with-dependencies.jar
