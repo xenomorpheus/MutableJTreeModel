@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class NodeJTreeModelDemo {
 	/** class logger */
-	private static final Logger logger = LogManager.getLogger(Node.class);
+	private static final Logger logger = LogManager.getLogger(NodeJTreeModelDemo.class);
 
 	/** the root node of the tree. */
 	private static final Node ROOT = new Node("Root Node");
