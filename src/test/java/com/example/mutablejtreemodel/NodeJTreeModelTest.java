@@ -1,6 +1,9 @@
 package com.example.mutablejtreemodel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import javax.swing.event.TreeModelEvent;
 
@@ -10,17 +13,15 @@ public class NodeJTreeModelTest {
 
 	@Test
 	public void testNodeJTreeModel() {
-		fail("Not yet implemented");
+        AbstractTreeModel model = new NodeJTreeModel();
 	}
 
 	@Test
-	public void testGetRoot() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetRoot() {
-		fail("Not yet implemented");
+	public void testRoot() {
+        NodeJTreeModel model = new NodeJTreeModel();
+		Node root = new Node();
+		model.setRoot(root);
+		assertEquals( root, model.getRoot());
 	}
 
 	@Test
