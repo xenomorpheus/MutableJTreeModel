@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 
 import org.junit.Test;
 
@@ -25,23 +26,25 @@ public class NodeJTreeModelTest {
 	}
 
 	@Test
-	public void testAddTreeModelListener() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testRemoveTreeModelListener() {
-		fail("Not yet implemented");
+	public void testAddRemoveTreeModelListener() {
+        AbstractTreeModel model = new NodeJTreeModel();
+        TreeModelListener listener = new NodeJTreeModel();
+		model.addTreeModelListener(listener);
+		model.removeTreeModelListener(listener);
 	}
 
 	@Test
 	public void testIsLeaf() {
-		fail("Not yet implemented");
+		AbstractTreeModel model = new NodeJTreeModel();
+		Node node = new Node();
+		assertTrue(model.isLeaf(node));
 	}
 
 	@Test
 	public void testGetChildCount() {
-		fail("Not yet implemented");
+		AbstractTreeModel model = new NodeJTreeModel();
+		Node node = new Node();
+		assertEquals(0, model.getChildCount(node));
 	}
 
 	@Test
