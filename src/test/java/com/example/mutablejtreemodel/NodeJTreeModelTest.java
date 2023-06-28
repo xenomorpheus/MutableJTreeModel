@@ -12,6 +12,41 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.junit.Test;
 
+class MyTreeModelListener implements TreeModelListener{
+
+	private int treeNodesChanged = 0;
+
+	public MyTreeModelListener(){
+		super();
+	}
+
+	@Override
+	public void treeNodesChanged(TreeModelEvent e) {
+		System.out.print("treeNodesChanged");
+		treeNodesChanged++;
+	}
+
+	@Override
+	public void treeNodesInserted(TreeModelEvent e) {
+		System.out.print("treeNodesInserted");
+	}
+
+	@Override
+	public void treeNodesRemoved(TreeModelEvent e) {
+		System.out.print("treeNodesRemoved");
+	}
+
+	@Override
+	public void treeStructureChanged(TreeModelEvent e) {
+		System.out.print("treeStructureChanged");
+	}
+
+	public int getTreeNodesChanged() {
+		return treeNodesChanged;
+	}
+
+};
+
 public class NodeJTreeModelTest {
 
 	@Test
@@ -58,13 +93,13 @@ public class NodeJTreeModelTest {
 	@Test
 	public void testGetChild() {
 		AbstractTreeModel model = new NodeJTreeModel();
+		DefaultMutableTreeNode child = new Node("child");
+		DefaultMutableTreeNode child1 = new Node("child1");
 		DefaultMutableTreeNode parent = new Node();
-		DefaultMutableTreeNode child = new Node();
-		DefaultMutableTreeNode child1 = new Node();
 		parent.add(child);
 		parent.add(child1);
-		assertEquals(child, model.getChild(parent,0));
-		assertEquals(child1, model.getChild(parent,1));
+		assertEquals(child, model.getChild(parent, 0));
+		assertEquals(child1, model.getChild(parent, 1));
 	}
 
 	@Test
@@ -81,7 +116,18 @@ public class NodeJTreeModelTest {
 
 	@Test
 	public void testValueForPathChanged() {
-		fail("Not yet implemented");
+		NodeJTreeModel model = new NodeJTreeModel();
+		Node root = new Node();
+		Node child1 = new Node();
+		MyTreeModelListener listener = new MyTreeModelListener();
+		model.addTreeModelListener(listener);
+		model.setRoot(root);
+		assertEquals(0, listener.getTreeNodesChanged());
+		root.setName("root");
+		root.add(child1);
+		assertEquals(1, listener.getTreeNodesChanged());
+		child1.setName("child1");
+		assertEquals(2, listener.getTreeNodesChanged());
 	}
 
 	@Test
