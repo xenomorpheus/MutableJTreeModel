@@ -2,11 +2,13 @@ package com.example.mutablejtreemodel;
 
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.junit.Test;
 
@@ -14,21 +16,21 @@ public class NodeJTreeModelTest {
 
 	@Test
 	public void testNodeJTreeModel() {
-        AbstractTreeModel model = new NodeJTreeModel();
+		AbstractTreeModel model = new NodeJTreeModel();
 	}
 
 	@Test
 	public void testRoot() {
-        NodeJTreeModel model = new NodeJTreeModel();
+		NodeJTreeModel model = new NodeJTreeModel();
 		Node root = new Node();
 		model.setRoot(root);
-		assertEquals( root, model.getRoot());
+		assertEquals(root, model.getRoot());
 	}
 
 	@Test
 	public void testAddRemoveTreeModelListener() {
-        AbstractTreeModel model = new NodeJTreeModel();
-        TreeModelListener listener = new NodeJTreeModel();
+		AbstractTreeModel model = new NodeJTreeModel();
+		TreeModelListener listener = new NodeJTreeModel();
 		model.addTreeModelListener(listener);
 		model.removeTreeModelListener(listener);
 	}
@@ -36,25 +38,45 @@ public class NodeJTreeModelTest {
 	@Test
 	public void testIsLeaf() {
 		AbstractTreeModel model = new NodeJTreeModel();
-		Node node = new Node();
-		assertTrue(model.isLeaf(node));
+		DefaultMutableTreeNode child = new Node();
+		assertTrue(model.isLeaf(child));
+		DefaultMutableTreeNode parent = new Node();
+		parent.add(child);
+		assertFalse(model.isLeaf(parent));
 	}
 
 	@Test
 	public void testGetChildCount() {
 		AbstractTreeModel model = new NodeJTreeModel();
-		Node node = new Node();
-		assertEquals(0, model.getChildCount(node));
+		DefaultMutableTreeNode child = new Node();
+		DefaultMutableTreeNode parent = new Node();
+		assertEquals(0, model.getChildCount(parent));
+		parent.add(child);
+		assertEquals(1, model.getChildCount(parent));
 	}
 
 	@Test
 	public void testGetChild() {
-		fail("Not yet implemented");
+		AbstractTreeModel model = new NodeJTreeModel();
+		DefaultMutableTreeNode parent = new Node();
+		DefaultMutableTreeNode child = new Node();
+		DefaultMutableTreeNode child1 = new Node();
+		parent.add(child);
+		parent.add(child1);
+		assertEquals(child, model.getChild(parent,0));
+		assertEquals(child1, model.getChild(parent,1));
 	}
 
 	@Test
 	public void testGetIndexOfChild() {
-		fail("Not yet implemented");
+		AbstractTreeModel model = new NodeJTreeModel();
+		DefaultMutableTreeNode child = new Node("child");
+		DefaultMutableTreeNode child1 = new Node("child1");
+		DefaultMutableTreeNode parent = new Node();
+		parent.add(child);
+		parent.add(child1);
+		assertEquals(0, model.getIndexOfChild(parent, child));
+		assertEquals(1, model.getIndexOfChild(parent, child1));
 	}
 
 	@Test
