@@ -1,5 +1,8 @@
 package com.example.mutablejtreemodel;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,41 +14,6 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.junit.Test;
-
-class MyTreeModelListener implements TreeModelListener{
-
-	private int treeNodesChanged = 0;
-
-	public MyTreeModelListener(){
-		super();
-	}
-
-	@Override
-	public void treeNodesChanged(TreeModelEvent e) {
-		System.out.print("treeNodesChanged");
-		treeNodesChanged++;
-	}
-
-	@Override
-	public void treeNodesInserted(TreeModelEvent e) {
-		System.out.print("treeNodesInserted");
-	}
-
-	@Override
-	public void treeNodesRemoved(TreeModelEvent e) {
-		System.out.print("treeNodesRemoved");
-	}
-
-	@Override
-	public void treeStructureChanged(TreeModelEvent e) {
-		System.out.print("treeStructureChanged");
-	}
-
-	public int getTreeNodesChanged() {
-		return treeNodesChanged;
-	}
-
-};
 
 public class NodeJTreeModelTest {
 
@@ -119,20 +87,24 @@ public class NodeJTreeModelTest {
 		NodeJTreeModel model = new NodeJTreeModel();
 		Node root = new Node();
 		Node child1 = new Node();
-		MyTreeModelListener listener = new MyTreeModelListener();
+		TestTreeModelListener listener = new TestTreeModelListener();
 		model.addTreeModelListener(listener);
 		model.setRoot(root);
-		assertEquals(0, listener.getTreeNodesChanged());
+		List<TreeModelEvent> expected = new ArrayList<>();
+		assertEquals(expected, listener.getNodesChanged());
 		root.setName("root");
 		root.add(child1);
-		assertEquals(1, listener.getTreeNodesChanged());
+		expected.add(new TreeModelEvent(this, root.getPathFromRoot(), null, null));
+		assertEquals(expected, listener.getNodesChanged());
 		child1.setName("child1");
-		assertEquals(2, listener.getTreeNodesChanged());
+		expected.add(new TreeModelEvent(this, child1.getPathFromRoot(), null, null));
+		assertEquals(expected, listener.getNodesChanged());
 	}
 
 	@Test
 	public void testToString() {
-		fail("Not yet implemented");
+		AbstractTreeModel model = new NodeJTreeModel();
+		assertEquals("NodeJTreeModel", model.toString());
 	}
 
 	@Test
@@ -152,19 +124,19 @@ public class NodeJTreeModelTest {
 		Node child = new Node("Child");
 		root.insert(child, 0);
 		// Test that we heard the event.
-		assertEquals("Changed count", listener.getNodesChanged().size(), 0);
-		assertEquals("Insert count", listener.getNodesInserted().size(), 1);
-		assertEquals("Removed count", listener.getNodesRemoved().size(), 0);
-		assertEquals("StructureChanged count", listener.getStructureChanged()
-				.size(), 0);
+		assertEquals("Changed count", 0, listener.getNodesChanged().size());
+		assertEquals("Insert count", 1, listener.getNodesInserted().size());
+		assertEquals("Removed count", 0, listener.getNodesRemoved().size());
+		assertEquals("StructureChanged count", 0, listener.getStructureChanged()
+				.size());
 		// Check inserted event
 		TreeModelEvent e = listener.getNodesInserted().get(0);
 		// assertTrue("e source", treeModel.equals(e.getSource()));
 		// TODO more unit tests
 		assertNotNull("e path", e.getPath());
 		// TODO more unit tests
-		assertEquals("e childIndex length", e.getChildIndices().length, 1);
-		assertEquals("e children length", e.getChildren().length, 1);
+		assertEquals("e childIndex length", 1, e.getChildIndices().length);
+		assertEquals("e children length",1, e.getChildren().length);
 		assertTrue("e children 0", e.getChildren()[0].equals(child));
 		fail("Not yet completed");
 	}
