@@ -131,12 +131,13 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		}
 
 		int index = getIndex(child);
-		super.remove(child);
 		// Inform listeners that we have removed node(s).
 		TreeModelEvent e = new TreeModelEvent(this, getPathFromRoot(),
 				new int[] { index }, new TreeNode[] { child });
 		logger.debug("this=" + this + " fire event " + e);
 		fireTreeNodesRemoved(e);
+
+		super.remove(child);
 	}
 
 	/**
