@@ -64,7 +64,7 @@
                     <archive>
                         <manifest>
                             <!-- add to the Jar's manifest to tell it the main. -->
-                            <mainClass>com.example.mutablejtreemodel.Main</mainClass>
+                            <mainClass>com.example.mutablejtreemodel.NodeJTreeModelDemo</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
