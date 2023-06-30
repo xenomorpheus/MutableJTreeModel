@@ -132,6 +132,7 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 
 		int index = getIndex(child);
 		// Inform listeners that we have removed node(s).
+		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeNodesRemoved(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
 		TreeModelEvent e = new TreeModelEvent(this, getPathFromRoot(),
 				new int[] { index }, new TreeNode[] { child });
 		logger.debug("this=" + this + " fire event " + e);
