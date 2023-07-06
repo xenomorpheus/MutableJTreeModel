@@ -17,32 +17,16 @@ class TestTreeModelListener implements TreeModelListener {
 		return nodesChanged;
 	}
 
-	public void setChanged(List<TreeModelEvent> list) {
-		nodesChanged = list;
-	}
-
 	public List<TreeModelEvent> getNodesInserted() {
 		return nodesInserted;
-	}
-
-	public void setNodeInserted(List<TreeModelEvent> list) {
-		nodesInserted = list;
 	}
 
 	public List<TreeModelEvent> getNodesRemoved() {
 		return nodesRemoved;
 	}
 
-	public void setNodesRemoved(List<TreeModelEvent> list) {
-		nodesRemoved = list;
-	}
-
 	public List<TreeModelEvent> getStructureChanged() {
 		return structureChanged;
-	}
-
-	public void setStructureChanged(List<TreeModelEvent> list) {
-		structureChanged = list;
 	}
 
 	@Override
@@ -63,10 +47,5 @@ class TestTreeModelListener implements TreeModelListener {
 	@Override
 	public void treeStructureChanged(TreeModelEvent e) {
 		structureChanged.add(e);
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName();
 	}
 }
