@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -80,6 +81,25 @@ public class NodeJTreeModelTest {
 		parent.add(child1);
 		assertEquals(0, model.getIndexOfChild(parent, child));
 		assertEquals(1, model.getIndexOfChild(parent, child1));
+	}
+
+	@Test
+	public void testSetNameFireTreeNodesChanged() {
+		NodeJTreeModel model = new NodeJTreeModel();
+		Node root = new Node();
+		TestTreeModelListener listener = new TestTreeModelListener();
+		model.addTreeModelListener(listener);
+		model.setRoot(root);
+		assertEquals(0, listener.getNodesChanged().size());
+		root.setName("root");
+		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeNodesChanged(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
+		var got = listener.getNodesChanged();
+		assertEquals(1, got.size());
+		assertEquals(root, got.get(0).getSource());
+		assertNull(got.get(0).getPath());
+		assertEquals(0, got.get(0).getChildIndices().length);
+		assertEquals(1, got.get(0).getChildren().length);
+		assertEquals(root , got.get(0).getChildren()[0]);
 	}
 
 	@Test
