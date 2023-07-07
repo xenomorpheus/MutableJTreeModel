@@ -21,6 +21,12 @@ public class NodeJTreeModelTest {
 	}
 
 	@Test
+	public void testToString() {
+		AbstractTreeModel model = new NodeJTreeModel();
+		assertEquals("NodeJTreeModel", model.toString());
+	}
+
+	@Test
 	public void testRoot() {
 		NodeJTreeModel model = new NodeJTreeModel();
 		Node root = new Node();
@@ -82,6 +88,7 @@ public class NodeJTreeModelTest {
 
 	@Test
 	public void testSetNameFireTreeNodesChanged() {
+		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeNodesChanged(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
 		NodeJTreeModel model = new NodeJTreeModel();
 		Node root = new Node();
 		TestTreeModelListener listener = new TestTreeModelListener();
@@ -89,25 +96,33 @@ public class NodeJTreeModelTest {
 		model.setRoot(root);
 		assertEquals(0, listener.getNodesChanged().size());
 		root.setName("root");
-		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeNodesChanged(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
+		assertEquals("Insert count", 0, listener.getNodesInserted().size());
+		assertEquals("Removed count", 0, listener.getNodesRemoved().size());
+		assertEquals("StructureChanged count", 0, listener.getStructureChanged()
+				.size());
 		var got = listener.getNodesChanged();
 		assertEquals(1, got.size());
 		assertEquals(root, got.get(0).getSource());
 		assertNull(got.get(0).getPath());
 		assertEquals(0, got.get(0).getChildIndices().length);
 		assertEquals(1, got.get(0).getChildren().length);
-		assertEquals(root , got.get(0).getChildren()[0]);
+		assertEquals(root, got.get(0).getChildren()[0]);
 	}
 
 	@Test
-	public void testInsertFireTreeNodesInserted() {
+	public void testAddFireTreeNodesInserted() {
+		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeNodesInserted(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
 		NodeJTreeModel model = new NodeJTreeModel();
 		Node root = new Node("root");
 		TestTreeModelListener listener = new TestTreeModelListener();
 		model.addTreeModelListener(listener);
 		model.setRoot(root);
 		Node child1 = new Node("child");
-		root.insert(child1,0);
+		root.add(child1);
+		assertEquals("Changed count", 0, listener.getNodesChanged().size());
+		assertEquals("Removed count", 0, listener.getNodesRemoved().size());
+		assertEquals("StructureChanged count", 0, listener.getStructureChanged()
+				.size());
 		var got = listener.getNodesInserted();
 		assertEquals(1, got.size());
 		assertEquals(root, got.get(0).getSource());
@@ -115,14 +130,9 @@ public class NodeJTreeModelTest {
 		assertEquals(root, got.get(0).getPath()[0]);
 		assertEquals(1, got.get(0).getChildren().length);
 		assertEquals(0, got.get(0).getChildIndices()[0]);
-		assertEquals(child1 , got.get(0).getChildren()[0]);
+		assertEquals(child1, got.get(0).getChildren()[0]);
 	}
 
-	@Test
-	public void testToString() {
-		AbstractTreeModel model = new NodeJTreeModel();
-		assertEquals("NodeJTreeModel", model.toString());
-	}
 
 	@Test
 	public void testTreeNodesChanged() {
@@ -130,32 +140,27 @@ public class NodeJTreeModelTest {
 	}
 
 	@Test
-	public void testTreeNodesInserted() {
-		// Setup
-		NodeJTreeModel treeModel = new NodeJTreeModel();
-		Node root = new Node("Root");
-		treeModel.setRoot(root);
+	public void testInsertFireTreeNodesInserted() {
+		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeNodesInserted(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
+		NodeJTreeModel model = new NodeJTreeModel();
+		Node root = new Node("root");
 		TestTreeModelListener listener = new TestTreeModelListener();
-		// Add a listener, then add a new Node.
-		treeModel.addTreeModelListener(listener);
-		Node child = new Node("Child");
-		root.insert(child, 0);
-		// Test that we heard the event.
+		model.addTreeModelListener(listener);
+		model.setRoot(root);
+		Node child1 = new Node("child");
+		root.insert(child1, 0);
 		assertEquals("Changed count", 0, listener.getNodesChanged().size());
-		assertEquals("Insert count", 1, listener.getNodesInserted().size());
 		assertEquals("Removed count", 0, listener.getNodesRemoved().size());
 		assertEquals("StructureChanged count", 0, listener.getStructureChanged()
 				.size());
-		// Check inserted event
-		TreeModelEvent e = listener.getNodesInserted().get(0);
-		// assertTrue("e source", treeModel.equals(e.getSource()));
-		// TODO more unit tests
-		assertNotNull("e path", e.getPath());
-		// TODO more unit tests
-		assertEquals("e childIndex length", 1, e.getChildIndices().length);
-		assertEquals("e children length",1, e.getChildren().length);
-		assertTrue("e children 0", e.getChildren()[0].equals(child));
-		fail("Not yet completed");
+		var got = listener.getNodesInserted();
+		assertEquals(1, got.size());
+		assertEquals(root, got.get(0).getSource());
+		assertEquals(1, got.get(0).getPath().length);
+		assertEquals(root, got.get(0).getPath()[0]);
+		assertEquals(1, got.get(0).getChildren().length);
+		assertEquals(0, got.get(0).getChildIndices()[0]);
+		assertEquals(child1, got.get(0).getChildren()[0]);
 	}
 
 	@Test
