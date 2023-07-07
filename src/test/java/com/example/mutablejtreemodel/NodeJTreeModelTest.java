@@ -1,8 +1,5 @@
 package com.example.mutablejtreemodel;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -103,22 +100,22 @@ public class NodeJTreeModelTest {
 	}
 
 	@Test
-	public void testValueForPathChanged() {
+	public void testInsertFireTreeNodesInserted() {
 		NodeJTreeModel model = new NodeJTreeModel();
-		Node root = new Node();
-		Node child1 = new Node();
+		Node root = new Node("root");
 		TestTreeModelListener listener = new TestTreeModelListener();
 		model.addTreeModelListener(listener);
 		model.setRoot(root);
-		List<TreeModelEvent> expected = new ArrayList<>();
-		assertEquals(expected, listener.getNodesChanged());
-		root.setName("root");
-		root.add(child1);
-		expected.add(new TreeModelEvent(this, root.getPathFromRoot(), null, null));
-		assertEquals(expected, listener.getNodesChanged());
-		child1.setName("child1");
-		expected.add(new TreeModelEvent(this, child1.getPathFromRoot(), null, null));
-		assertEquals(expected, listener.getNodesChanged());
+		Node child1 = new Node("child");
+		root.insert(child1,0);
+		var got = listener.getNodesInserted();
+		assertEquals(1, got.size());
+		assertEquals(root, got.get(0).getSource());
+		assertEquals(1, got.get(0).getPath().length);
+		assertEquals(root, got.get(0).getPath()[0]);
+		assertEquals(1, got.get(0).getChildren().length);
+		assertEquals(0, got.get(0).getChildIndices()[0]);
+		assertEquals(child1 , got.get(0).getChildren()[0]);
 	}
 
 	@Test
