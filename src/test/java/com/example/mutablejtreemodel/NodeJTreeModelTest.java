@@ -168,7 +168,30 @@ public class NodeJTreeModelTest {
 
 	@Test
 	public void testTreeNodesRemoved() {
-		fail("Not yet implemented");
+		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeNodesRemoved(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
+				NodeJTreeModel model = new NodeJTreeModel();
+		Node root = new Node("root");
+		TestTreeModelListener listener = new TestTreeModelListener();
+		model.setRoot(root);
+		root.add(new Node("child0"));
+		Node child1 = new Node("child1");
+		root.add(child1);
+		root.add(new Node("child2"));
+		model.addTreeModelListener(listener);
+		var postition = root.getIndex(child1);
+		root.remove(child1);
+		assertEquals("Insert count", 0, listener.getNodesInserted().size());
+		assertEquals("Changed count", 0, listener.getNodesChanged().size());
+		assertEquals("StructureChanged count", 0, listener.getStructureChanged().size());
+		var got = listener.getNodesRemoved();
+		assertEquals(1, got.size());
+		assertEquals(root, got.get(0).getSource());
+		assertEquals(1, got.get(0).getPath().length);
+		assertEquals(root, got.get(0).getPath()[0]);
+		assertEquals(1, got.get(0).getChildren().length);
+		assertEquals(child1, got.get(0).getChildren()[0]);
+		assertEquals(postition, got.get(0).getChildIndices()[0]);
+		assertNull("child1's parent", child1.getParent());
 	}
 
 	@Test
