@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
  * @author xenomorpheus
  * @version $Revision: 1.0 $
  */
-public class Node extends DefaultMutableTreeNode implements TreeModelListener {
+public class Node extends DefaultMutableTreeNode {
 
 	/** serial id. */
 	private static final long serialVersionUID = 1L;
@@ -270,49 +270,6 @@ public class Node extends DefaultMutableTreeNode implements TreeModelListener {
 		for (TreeModelListener listener : tmpListeners) {
 			listener.treeNodesRemoved(e);
 		}
-	}
-
-	// Start of section where we are notified of changes.
-	// http://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html
-
-	// TreeModelListener
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void treeNodesChanged(TreeModelEvent e) {
-		logger.debug("this=" + this + ", event=" + e);
-		// TODO Currently we don't care if nodes we listen to change.
-	}
-
-	// TreeModelListener
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void treeNodesInserted(TreeModelEvent e) {
-		logger.debug("this=" + this + ", event=" + e);
-		// TODO Currently we don't care if nodes we listen to change.
-	}
-
-	// TreeModelListener
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void treeNodesRemoved(TreeModelEvent e) {
-		logger.debug("this=" + this + ", event=" + e);
-		// TODO Currently we don't care if nodes we listen to change.
-	}
-
-	// TreeModelListener
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void treeStructureChanged(TreeModelEvent e) {
-		logger.debug("this=" + this + ", event=" + e);
-		// TODO Currently we don't care if nodes we listen to change.
 	}
 
 	// Misc. methods.
