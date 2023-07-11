@@ -50,10 +50,9 @@ public class NodeJTreeEditor {
 
 			Object selObject = jTree.getLastSelectedPathComponent();
 			if ((null != selObject) && (selObject instanceof Node)) {
-				Node location = (Node) jTree.getLastSelectedPathComponent();
-				Node newNode = new Node("node" + ++NodeId);
+				Node location = (Node)selObject;
+				location.add(new Node("node" + ++NodeId));
 				putValue(KEY_NODE_ID, NodeId);
-				location.add(newNode);
 
 				// Expand the new added node
 				jTree.expandPath(location.getPathFromRoot());
@@ -77,8 +76,7 @@ public class NodeJTreeEditor {
 			JTree jTree = (JTree) getValue(KEY_JTREE);
 			Object selObject = jTree.getLastSelectedPathComponent();
 			if ((null != selObject) && (selObject instanceof Node)) {
-				Node node = (Node) jTree.getLastSelectedPathComponent();
-				node.destroy();
+				((Node) selObject).destroy();
 			}
 		}
 	};
