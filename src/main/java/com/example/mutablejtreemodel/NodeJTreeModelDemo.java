@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * This version automatically add nodes. This is a simplified version that
+ * This version automatically adds nodes. This is a simplified version that
  * removes the button logic, and hence button events as a possible cause of
  * bugs.
  *
@@ -25,9 +25,6 @@ import org.apache.logging.log4j.Logger;
 public class NodeJTreeModelDemo {
 	/** class logger */
 	private static final Logger logger = LogManager.getLogger(NodeJTreeModelDemo.class);
-
-	/** the root node of the tree. */
-	private static final Node ROOT = new Node("Root Node");
 
 	/**
 	 * JTree UI to show tree. We only create this so we programmatically show
@@ -75,12 +72,13 @@ public class NodeJTreeModelDemo {
 	 * Method main.
 	 *
 	 * @param argv
-	 *            command line arguments. Not used.
+	 *            Command line arguments. Not used.
 	 *
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] argv) throws InterruptedException {
-		Node parent = ROOT;
+		final Node root = new Node("Root Node");
+		Node parent = root;
 		Node child = null;
 
 		// The UI is on a different thread to the one that changes
@@ -88,12 +86,13 @@ public class NodeJTreeModelDemo {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				NodeJTreeModelDemo demo = new NodeJTreeModelDemo();
-				demo.startSwing(ROOT);
+				demo.startSwing(root);
 			}
 		});
+
 		// Keep creating child nodes within the last created child node.
 		for (int i = 0; i < 10; i++) {
-			// TODO - fix - ROOT.setName("Root Node Name "+i);
+			// TODO fix - root.setName("Root Node Name "+i);
 			for (int j = 0; j < 2; j++) {
 				logger.info("********************************************");
 				Thread.sleep(1000);
@@ -109,7 +108,7 @@ public class NodeJTreeModelDemo {
 			}
 			parent = child;
 			// Also add children to root. Just for fun.
-			ROOT.add(new Node("CHILD_NODE_" + i));
+			root.add(new Node("CHILD_NODE_" + i));
 
 		}
 	}
