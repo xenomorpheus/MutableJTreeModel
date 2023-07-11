@@ -33,7 +33,7 @@ public class NodeJTreeModelDemo {
 	 * JTree UI to show tree. We only create this so we programmatically show
 	 * how to select a node. No other operations are done on the raw JTree.
 	 */
-	private static JTree JTREE = new JTree();
+	private static JTree jTree = new JTree();
 
 	/** Constructor */
 	NodeJTreeModelDemo() {
@@ -53,11 +53,11 @@ public class NodeJTreeModelDemo {
 		treeModel.setRoot(root);
 
 		// Tell JTree to display our model
-		JTREE.setModel(treeModel);
-		JTREE.setEditable(true);
+		jTree.setModel(treeModel);
+		jTree.setEditable(true);
 
 		// The JTree can get big, so allow it to scroll.
-		JScrollPane scrollpane = new JScrollPane(JTREE);
+		JScrollPane scrollpane = new JScrollPane(jTree);
 
 		// Setup frame.
 		JFrame frame = new JFrame("MyNode Creator");
@@ -101,7 +101,7 @@ public class NodeJTreeModelDemo {
 				parent.add(child);
 
 				// Select the newly created node.
-				TreeSelectionModel treeSelectionModel = JTREE
+				TreeSelectionModel treeSelectionModel = jTree
 						.getSelectionModel();
 				TreePath path = child.getPathFromRoot();
 				treeSelectionModel.setSelectionPath(path);
