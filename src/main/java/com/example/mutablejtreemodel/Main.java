@@ -27,7 +27,7 @@ public class Main {
 		Node parent = root;
 		Node child = null;
 
-		// The UI is on a different thread to the one that changes
+		// The UI is in a different thread to the one that changes
 		// the Model.
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -35,7 +35,9 @@ public class Main {
 			}
 		});
 
-		// Keep creating child nodes within the last created child node.
+
+		// Keep creating child nodes within the last created child node
+		// and within the root node.
 		for (int i = 0; i < 10; i++) {
 			// TODO fix - root.setName("Root Node Name "+i);
 			for (int j = 0; j < 2; j++) {
