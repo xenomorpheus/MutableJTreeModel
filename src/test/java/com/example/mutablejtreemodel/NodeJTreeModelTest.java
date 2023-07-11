@@ -4,10 +4,8 @@ import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -129,14 +127,9 @@ public class NodeJTreeModelTest {
 		assertEquals(1, got.get(0).getPath().length);
 		assertEquals(root, got.get(0).getPath()[0]);
 		assertEquals(1, got.get(0).getChildren().length);
+		assertEquals(1, got.get(0).getChildIndices().length);
 		assertEquals(0, got.get(0).getChildIndices()[0]);
 		assertEquals(child1, got.get(0).getChildren()[0]);
-	}
-
-
-	@Test
-	public void testTreeNodesChanged() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -162,6 +155,7 @@ public class NodeJTreeModelTest {
 		assertEquals(position, got.get(0).getPath().length);
 		assertEquals(root, got.get(0).getPath()[0]);
 		assertEquals(1, got.get(0).getChildren().length);
+		assertEquals(1, got.get(0).getChildIndices().length);
 		assertEquals(1, got.get(0).getChildIndices()[0]);
 		assertEquals(child1, got.get(0).getChildren()[0]);
 	}
@@ -169,7 +163,7 @@ public class NodeJTreeModelTest {
 	@Test
 	public void testTreeNodesRemoved() {
 		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeNodesRemoved(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
-				NodeJTreeModel model = new NodeJTreeModel();
+		NodeJTreeModel model = new NodeJTreeModel();
 		Node root = new Node("root");
 		TestTreeModelListener listener = new TestTreeModelListener();
 		model.setRoot(root);
@@ -177,8 +171,8 @@ public class NodeJTreeModelTest {
 		Node child1 = new Node("child1");
 		root.add(child1);
 		root.add(new Node("child2"));
-		model.addTreeModelListener(listener);
 		var postition = root.getIndex(child1);
+		model.addTreeModelListener(listener);
 		root.remove(child1);
 		assertEquals("Insert count", 0, listener.getNodesInserted().size());
 		assertEquals("Changed count", 0, listener.getNodesChanged().size());
@@ -190,13 +184,31 @@ public class NodeJTreeModelTest {
 		assertEquals(root, got.get(0).getPath()[0]);
 		assertEquals(1, got.get(0).getChildren().length);
 		assertEquals(child1, got.get(0).getChildren()[0]);
+		assertEquals(1, got.get(0).getChildIndices().length);
 		assertEquals(postition, got.get(0).getChildIndices()[0]);
 		assertNull("child1's parent", child1.getParent());
 	}
 
 	@Test
 	public void testTreeStructureChanged() {
-		fail("Not yet implemented");
+		// https://docs.oracle.com/javase/7/docs/api/javax/swing/tree/DefaultTreeModel.html#fireTreeStructureChanged(java.lang.Object,%20java.lang.Object[],%20int[],%20java.lang.Object[])
+		// NodeJTreeModel model = new NodeJTreeModel();
+		// Node root = new Node("root");
+		// TestTreeModelListener listener = new TestTreeModelListener();
+		// model.setRoot(root);
+		// root.fireTreeStructureChanged();
+		// assertEquals("Insert count", 0, listener.getNodesInserted().size());
+		// assertEquals("Removed count", 0, listener.getNodesRemoved().size());
+		// assertEquals("Changed count", 0, listener.getNodesChanged().size());
+		// var got = listener.getStructureChanged();
+		// assertEquals(1, got.size());
+		// assertEquals(root, got.get(0).getSource());
+
+		// fail("Not yet implemented");
+		// assertEquals(1, got.get(0).getPath().length);
+		// assertEquals(root, got.get(0).getPath()[0]);
+		// assertEquals(0, got.get(0).getChildren().length);
+		// assertEquals(0, got.get(0).getChildIndices().length);
 	}
 
 }
