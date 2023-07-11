@@ -15,9 +15,9 @@ import javax.swing.JTree;
 
 /**
  * UI that allows the user to alter the tree structure of nodes.
- * 
+ *
  * Note the UI JTree is updated by listening to changes in a TreeModel.
- * 
+ *
  * @author xenomorpheus
  * @version $Revision: 1.0 $
  */
@@ -77,7 +77,6 @@ public class NodeJTreeEditor {
 			JTree jTree = (JTree) getValue(KEY_JTREE);
 			Object selObject = jTree.getLastSelectedPathComponent();
 			if ((null != selObject) && (selObject instanceof Node)) {
-
 				Node node = (Node) jTree.getLastSelectedPathComponent();
 				node.destroy();
 			}
@@ -89,7 +88,7 @@ public class NodeJTreeEditor {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param rootNode
 	 *            the root node in the tree.
 	 */
@@ -122,10 +121,11 @@ public class NodeJTreeEditor {
 		frame.getContentPane().add(controlPanel, BorderLayout.SOUTH);
 		frame.setPreferredSize(new Dimension(400, 600));
 		frame.setLocationRelativeTo(null); // This will center your app
+
 		// Always pack the frame after adding components.
 		// (Recommended after every change that the components may have)
 		frame.pack();
-		frame.setVisible(true);
 
+		frame.setVisible(true);
 	}
 }

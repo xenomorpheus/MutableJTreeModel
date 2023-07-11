@@ -16,7 +16,6 @@ public class Main {
 	/** class logger */
 	private static final Logger logger = LogManager.getLogger(Main.class);
 
-
 	/**
 	 * Method main.
 	 *
