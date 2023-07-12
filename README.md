@@ -29,3 +29,14 @@ mvn package
 Run
 ===
 java -jar target/MutableJTreeModel-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+
+Coverage
+=========
+
+mvn jacoco:report
+Which will also be done by ...
+mvn package
+
+open target/site/jacoco/index.html
+
+
