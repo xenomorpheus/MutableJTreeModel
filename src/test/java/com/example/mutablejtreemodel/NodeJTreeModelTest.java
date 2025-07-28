@@ -14,6 +14,7 @@ public class NodeJTreeModelTest {
   @Test
   public void testNodeJTreeModel() {
     AbstractTreeModel model = new NodeJTreeModel();
+    assertEquals("NodeJTreeModel", model.getClass().getSimpleName());
   }
 
   @Test
